@@ -13,24 +13,28 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const newUser = this.userRepository.create(createUserDto);
-     return await this.userRepository.save(newUser);
+    const userData = {
+      ...createUserDto,
+      dateOfBirth: createUserDto.dateOfBirth ? new Date(createUserDto.dateOfBirth) : null,
+    };
+    const newUser = this.userRepository.create(userData);
+    return await this.userRepository.save(newUser);
   }
-
-
 
   async findAllUsers(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-
-  async updateUser(id: number, updateUserDto: Partial <User>): Promise<User> {
-    await this.userRepository.update(id, updateUserDto);
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const updateData: Partial<User> = {
+      ...updateUserDto,
+      dateOfBirth: updateUserDto.dateOfBirth ? new Date(updateUserDto.dateOfBirth) : undefined,
+    };
+    
+    await this.userRepository.update(id, updateData);
     return this.findById(id);
   }
 
-
-  
   async deleteUser(id: number): Promise<void> {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
@@ -38,10 +42,8 @@ export class UserService {
     }
   }
 
-
- 
   async findById(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ where : {id} });
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }

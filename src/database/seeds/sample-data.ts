@@ -1,0 +1,251 @@
+export const sampleCvTemplates = [
+  {
+    name: 'Modern Professional',
+    description: 'A clean, modern template perfect for corporate professionals',
+    category: 'Modern',
+    layout: {
+      sections: ['header', 'summary', 'experience', 'education', 'skills'],
+      sectionOrder: ['header', 'summary', 'experience', 'education', 'skills'],
+      styling: {
+        primaryColor: '#2563eb',
+        secondaryColor: '#64748b',
+        fontFamily: 'Inter',
+        fontSize: 12,
+        lineHeight: 1.5,
+      },
+      pageFormat: {
+        size: 'A4' as const,
+        margin: 20,
+      },
+    },
+    previewImage: {
+      url: '/templates/modern-professional.jpg',
+      alt: 'Modern Professional Template Preview',
+    },
+    isPremium: false,
+    isActive: true,
+  },
+  {
+    name: 'Classic Executive',
+    description: 'Traditional layout ideal for senior executives and managers',
+    category: 'Classic',
+    layout: {
+      sections: ['header', 'summary', 'experience', 'education', 'skills', 'certifications'],
+      sectionOrder: ['header', 'summary', 'experience', 'education', 'skills', 'certifications'],
+      styling: {
+        primaryColor: '#1f2937',
+        secondaryColor: '#6b7280',
+        fontFamily: 'Times New Roman',
+        fontSize: 11,
+        lineHeight: 1.4,
+      },
+      pageFormat: {
+        size: 'A4' as const,
+        margin: 25,
+      },
+    },
+    previewImage: {
+      url: '/templates/classic-executive.jpg',
+      alt: 'Classic Executive Template Preview',
+    },
+    isPremium: false,
+    isActive: true,
+  },
+  {
+    name: 'Creative Designer',
+    description: 'Bold and creative template for designers and creative professionals',
+    category: 'Creative',
+    layout: {
+      sections: ['header', 'summary', 'experience', 'projects', 'skills', 'education'],
+      sectionOrder: ['header', 'summary', 'projects', 'experience', 'skills', 'education'],
+      styling: {
+        primaryColor: '#7c3aed',
+        secondaryColor: '#a855f7',
+        fontFamily: 'Poppins',
+        fontSize: 11,
+        lineHeight: 1.6,
+      },
+      pageFormat: {
+        size: 'A4' as const,
+        margin: 15,
+      },
+    },
+    previewImage: {
+      url: '/templates/creative-designer.jpg',
+      alt: 'Creative Designer Template Preview',
+    },
+    isPremium: true,
+    isActive: true,
+  },
+  {
+    name: 'Minimalist Clean',
+    description: 'Simple, clean design that focuses on content',
+    category: 'Minimalist',
+    layout: {
+      sections: ['header', 'experience', 'education', 'skills'],
+      sectionOrder: ['header', 'experience', 'education', 'skills'],
+      styling: {
+        primaryColor: '#000000',
+        secondaryColor: '#525252',
+        fontFamily: 'Helvetica',
+        fontSize: 10,
+        lineHeight: 1.3,
+      },
+      pageFormat: {
+        size: 'A4' as const,
+        margin: 30,
+      },
+    },
+    previewImage: {
+      url: '/templates/minimalist-clean.jpg',
+      alt: 'Minimalist Clean Template Preview',
+    },
+    isPremium: false,
+    isActive: true,
+  },
+];
+
+export const sampleUsers = [
+  {
+    firstname: 'John',
+    lastname: 'Doe',
+    email: 'john.doe@example.com',
+    password: 'password123', // This should be hashed in real implementation
+    phone: '+1-555-0123',
+    city: 'New York',
+    country: 'United States',
+    postalCode: '10001',
+    address: '123 Main Street',
+    title: 'Software Engineer',
+    isVerified: true,
+  },
+  {
+    firstname: 'Jane',
+    lastname: 'Smith',
+    email: 'jane.smith@example.com',
+    password: 'password123',
+    phone: '+1-555-0124',
+    city: 'San Francisco',
+    country: 'United States',
+    postalCode: '94102',
+    address: '456 Tech Boulevard',
+    title: 'Product Manager',
+    isVerified: true,
+  },
+];
+
+export const sampleWorkExperiences = [
+  {
+    userId: 1,
+    jobTitle: 'Senior Software Engineer',
+    company: 'TechCorp Inc.',
+    city: 'New York',
+    country: 'United States',
+    startDate: new Date('2021-01-15'),
+    endDate: null,
+    currentlyWorking: true,
+    jobDescriptions: [
+      'Led development of microservices architecture serving 1M+ users',
+      'Mentored junior developers and conducted code reviews',
+      'Improved system performance by 40% through optimization initiatives',
+      'Collaborated with product team to define technical requirements',
+    ],
+    summary: 'Leading backend development initiatives for high-traffic applications',
+    sortOrder: 0,
+  },
+  {
+    userId: 1,
+    jobTitle: 'Software Engineer',
+    company: 'StartupXYZ',
+    city: 'Boston',
+    country: 'United States',
+    startDate: new Date('2019-06-01'),
+    endDate: new Date('2020-12-31'),
+    currentlyWorking: false,
+    jobDescriptions: [
+      'Developed RESTful APIs using Node.js and Express.js',
+      'Implemented automated testing reducing bugs by 60%',
+      'Built responsive web applications using React.js',
+    ],
+    summary: 'Full-stack development for early-stage startup',
+    sortOrder: 1,
+  },
+];
+
+export const sampleEducation = [
+  {
+    userId: 1,
+    institution: 'Massachusetts Institute of Technology',
+    degree: 'Master of Science',
+    fieldOfStudy: 'Computer Science',
+    city: 'Cambridge',
+    country: 'United States',
+    startDate: new Date('2017-09-01'),
+    endDate: new Date('2019-05-30'),
+    gpa: '3.8/4.0',
+    coursework: [
+      'Advanced Algorithms',
+      'Distributed Systems',
+      'Machine Learning',
+      'Software Engineering',
+    ],
+    honorsAndAwards: ['Dean\'s List', 'Graduate Research Fellowship'],
+    sortOrder: 0,
+  },
+  {
+    userId: 1,
+    institution: 'University of California, Berkeley',
+    degree: 'Bachelor of Science',
+    fieldOfStudy: 'Computer Science',
+    city: 'Berkeley',
+    country: 'United States',
+    startDate: new Date('2013-08-01'),
+    endDate: new Date('2017-05-30'),
+    gpa: '3.7/4.0',
+    extracurricularActivities: ['ACM Programming Team', 'Computer Science Student Association'],
+    sortOrder: 1,
+  },
+];
+
+export const sampleSkills = [
+  {
+    userId: 1,
+    name: 'JavaScript',
+    level: 'Expert',
+    category: 'Technical',
+    proficiencyRating: 9,
+    sortOrder: 0,
+  },
+  {
+    userId: 1,
+    name: 'Node.js',
+    level: 'Advanced',
+    category: 'Technical',
+    proficiencyRating: 8,
+    sortOrder: 1,
+  },
+  {
+    userId: 1,
+    name: 'React.js',
+    level: 'Advanced',
+    category: 'Technical',
+    proficiencyRating: 8,
+    sortOrder: 2,
+  },
+  {
+    userId: 1,
+    name: 'Python',
+    level: 'Intermediate',
+    category: 'Technical',
+    proficiencyRating: 7,
+    sortOrder: 3,
+  },
+  {
+    userId: 1,
+    name: 'Leadership',
+    level: 'Advanced',
+    category: 'Soft Skill',
+    proficiencyRating: 8,
+    sortOrder: 4,
+  },
+];

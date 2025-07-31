@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
@@ -33,6 +34,34 @@ export class User {
 
   @Column({ nullable: true })
   phone: string;
+
+  // CV Builder specific fields
+  @Column({ nullable: true })
+  city: string;
+
+  @Column({ nullable: true })
+  country: string;
+
+  @Column({ nullable: true })
+  postalCode: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  title: string; // Professional title
+
+  @Column({ nullable: true })
+  dateOfBirth: Date;
+
+  @Column('json', { nullable: true })
+  socialMedia: Array<{
+    platform: string;
+    link: string;
+  }>;
+
+  @Column({ nullable: true })
+  googleId: string; // For Google OAuth
 
   @Column({ default: false })
   isVerified: boolean;

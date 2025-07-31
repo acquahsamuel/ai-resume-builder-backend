@@ -1,0 +1,223 @@
+### CV Builder API Testing - VS Code REST Client
+### Install "REST Client" extension for VS Code to use this file
+### Click "Send Request" above each request to test
+
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+# Variables (update after login)
+@jwt_token = YOUR_JWT_TOKEN_HERE
+
+### 1. Register User
+POST {{baseUrl}}/api/v1/auth/register
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 2. Login User (Copy the token from response)
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+### 3. Get User Profile (Protected)
+GET {{baseUrl}}/api/v1/auth/profile
+Authorization: Bearer {{jwt_token}}
+
+### 4. Update User Profile
+PATCH {{baseUrl}}/api/v1/users/1
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "phone": "+1-555-0123",
+  "city": "New York",
+  "country": "United States",
+  "postalCode": "10001",
+  "address": "123 Main Street",
+  "title": "Software Engineer",
+  "socialMedia": [
+    {
+      "platform": "LinkedIn",
+      "link": "https://linkedin.com/in/johndoe"
+    },
+    {
+      "platform": "GitHub",
+      "link": "https://github.com/johndoe"
+    }
+  ]
+}
+
+### 5. Get All Users
+GET {{baseUrl}}/api/v1/users
+Authorization: Bearer {{jwt_token}}
+
+### 6. Add Work Experience
+POST {{baseUrl}}/api/v1/cv/work-experience
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "jobTitle": "Senior Software Engineer",
+  "company": "TechCorp Inc.",
+  "city": "New York",
+  "country": "United States",
+  "startDate": "2021-01-15",
+  "endDate": null,
+  "currentlyWorking": true,
+  "jobDescriptions": [
+    "Led development of microservices architecture serving 1M+ users",
+    "Mentored junior developers and conducted code reviews",
+    "Improved system performance by 40% through optimization initiatives"
+  ],
+  "summary": "Leading backend development initiatives",
+  "sortOrder": 0
+}
+
+### 7. Get All Work Experiences
+GET {{baseUrl}}/api/v1/cv/work-experience
+Authorization: Bearer {{jwt_token}}
+
+### 8. Get Specific Work Experience
+GET {{baseUrl}}/api/v1/cv/work-experience/1
+Authorization: Bearer {{jwt_token}}
+
+### 9. Update Work Experience
+PATCH {{baseUrl}}/api/v1/cv/work-experience/1
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "jobTitle": "Lead Software Engineer",
+  "summary": "Updated summary of responsibilities"
+}
+
+### 10. Generate Job Description (AI Feature)
+POST {{baseUrl}}/api/v1/cv/work-experience/generate-description
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "jobTitle": "Software Engineer",
+  "company": "TechCorp"
+}
+
+### 11. Reorder Work Experiences
+POST {{baseUrl}}/api/v1/cv/work-experience/reorder
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "experienceIds": [2, 1, 3]
+}
+
+### 12. Delete Work Experience
+DELETE {{baseUrl}}/api/v1/cv/work-experience/1
+Authorization: Bearer {{jwt_token}}
+
+### 13. Create CV (Legacy)
+POST {{baseUrl}}/api/v1/cv
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "templateId": "1",
+  "HeaderProfileInfo": {
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1-555-0123",
+    "city": "New York",
+    "country": "United States"
+  }
+}
+
+### 14. Get All CVs
+GET {{baseUrl}}/api/v1/cv
+Authorization: Bearer {{jwt_token}}
+
+### 15. Get CV by ID
+GET {{baseUrl}}/api/v1/cv/1
+Authorization: Bearer {{jwt_token}}
+
+### 16. Update CV
+PATCH {{baseUrl}}/api/v1/cv/1
+Authorization: Bearer {{jwt_token}}
+Content-Type: {{contentType}}
+
+{
+  "HeaderProfileInfo": {
+    "firstname": "John Updated",
+    "lastname": "Doe Updated"
+  }
+}
+
+### 17. Delete CV
+DELETE {{baseUrl}}/api/v1/cv/1
+Authorization: Bearer {{jwt_token}}
+
+### 18. Refresh Token
+POST {{baseUrl}}/api/v1/auth/refresh-token
+Content-Type: {{contentType}}
+
+{
+  "token": "{{jwt_token}}"
+}
+
+### 19. Forgot Password
+POST {{baseUrl}}/api/v1/auth/forgot-password
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com"
+}
+
+### 20. Reset Password
+POST {{baseUrl}}/api/v1/auth/reset-password
+Content-Type: {{contentType}}
+
+{
+  "token": "RESET_TOKEN_FROM_EMAIL",
+  "newPassword": "newpassword123"
+}
+
+### 21. Verify Email
+POST {{baseUrl}}/api/v1/auth/verify-email
+Content-Type: {{contentType}}
+
+{
+  "token": "EMAIL_VERIFICATION_TOKEN"
+}
+
+### 22. Resend Email Verification
+POST {{baseUrl}}/api/v1/auth/resend-verification
+Content-Type: {{contentType}}
+
+{
+  "email": "test@example.com"
+}
+
+### 23. Logout
+POST {{baseUrl}}/api/v1/auth/logout
+Authorization: Bearer {{jwt_token}}
+
+###
+# File Upload endpoints (use form data in tools like Postman)
+# POST {{baseUrl}}/api/v1/upload/profile-photo
+# POST {{baseUrl}}/api/v1/upload/document
+
+###
+# Testing Notes:
+# 1. Start server: npm run start:dev
+# 2. Update @jwt_token variable after login
+# 3. Replace user IDs (1, 2, etc.) with actual IDs from responses
+# 4. File uploads need multipart/form-data (use Postman for these)
+# 5. Check API_TESTING_GUIDE.md for detailed documentation

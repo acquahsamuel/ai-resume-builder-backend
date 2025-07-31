@@ -1,73 +1,254 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# CV Builder Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive backend API for a CV/Resume builder application built with NestJS, TypeORM, and MySQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+### 🔐 Authentication & Authorization
+- User registration and login
+- JWT-based authentication
+- Password reset and email verification
+- Google OAuth integration (configurable)
+- Protected routes with JWT guards
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 👤 User Management
+- Complete user profiles with CV-specific fields
+- Profile photo upload
+- Personal information management
+- Social media links
+
+### 📄 CV Content Management
+- **Work Experience**: CRUD operations with job descriptions
+- **Education**: Academic background with detailed information
+- **Skills**: Categorized skills with proficiency levels
+- **Personal Information**: Contact details and basic info
+- **File Uploads**: Profile photos and documents
+
+### 🎨 Template System
+- Multiple CV templates with different layouts
+- Template categorization (Modern, Classic, Creative, etc.)
+- Customizable styling options
+- Premium and free templates
+
+### 📁 File Management
+- Secure file upload for profile photos
+- Document upload support
+- File validation and size limits
+- Static file serving
+
+### 🛠 Technical Features
+- Environment-based configuration
+- Global exception handling
+- Input validation with class-validator
+- CORS configuration
+- Database relationships with TypeORM
+- Standardized API responses
+
+## Tech Stack
+
+- **Framework**: NestJS
+- **Database**: MySQL with TypeORM
+- **Authentication**: JWT + Passport
+- **File Upload**: Multer
+- **Validation**: class-validator, class-transformer
+- **Environment**: dotenv
 
 ## Installation
 
-```bash
-$ npm install
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd cv-builder-backend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment Configuration**
+   ```bash
+   cp .env.example .env
+   # Edit .env file with your configuration
+   ```
+
+4. **Database Setup**
+   - Create a MySQL database
+   - Update database credentials in `.env`
+   - The application will automatically create tables on first run
+
+5. **Start the application**
+   ```bash
+   # Development
+   npm run start:dev
+
+   # Production
+   npm run build
+   npm run start:prod
+   ```
+
+## Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```env
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=your_password
+DB_DATABASE=cleansheet_resume
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key
+
+# Application Configuration
+NODE_ENV=development
+PORT=3000
+
+# File Upload Configuration
+UPLOAD_DIR=uploads
+MAX_FILE_SIZE=5242880
+
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
 ```
 
-## Running the app
+## API Endpoints
 
-```bash
-# development
-$ npm run start
+### Authentication (`/api/v1/auth`)
+- `POST /register` - User registration
+- `POST /login` - User login
+- `POST /logout` - User logout
+- `GET /profile` - Get user profile (protected)
+- `POST /refresh-token` - Refresh JWT token
+- `POST /forgot-password` - Password reset request
+- `POST /reset-password` - Reset password
+- `POST /verify-email` - Email verification
+- `POST /resend-verification` - Resend verification email
 
-# watch mode
-$ npm run start:dev
+### Users (`/api/v1/users`)
+- `GET /` - Get all users (admin)
+- `GET /:id` - Get user by ID
+- `POST /` - Create user
+- `PATCH /:id` - Update user
+- `DELETE /:id` - Delete user
 
-# production mode
-$ npm run start:prod
+### Work Experience (`/api/v1/cv/work-experience`)
+- `GET /` - Get user's work experiences
+- `POST /` - Add work experience
+- `GET /:id` - Get specific work experience
+- `PATCH /:id` - Update work experience
+- `DELETE /:id` - Delete work experience
+- `POST /reorder` - Reorder experiences
+- `POST /generate-description` - AI-powered job description generation
+
+### File Upload (`/api/v1/upload`)
+- `POST /profile-photo` - Upload profile photo
+- `POST /document` - Upload document
+
+### CV Content (`/api/v1/cv`)
+- `GET /` - Get all CVs
+- `POST /` - Create CV
+- `GET /:id` - Get CV by ID
+- `PATCH /:id` - Update CV
+- `DELETE /:id` - Delete CV
+
+## Database Schema
+
+### User Entity
+- Basic information (name, email, password)
+- CV-specific fields (city, country, postal code)
+- Social media links
+- Profile photo
+- Authentication fields
+
+### Work Experience Entity
+- Job details (title, company, location)
+- Date range with current work support
+- Job descriptions array
+- Sort order for custom arrangement
+
+### Education Entity
+- Institution and degree information
+- Academic details (GPA, coursework)
+- Extracurricular activities
+- Honors and awards
+
+### Skills Entity
+- Skill name and category
+- Proficiency level (Beginner to Expert)
+- Rating system (1-10)
+- Custom sorting
+
+### CV Template Entity
+- Template metadata and categories
+- Layout configuration
+- Styling options
+- Premium/free classification
+
+## Project Structure
+
+```
+src/
+├── auth/                 # Authentication module
+│   ├── guards/          # JWT guards
+│   ├── strategies/      # Passport strategies
+│   └── ...
+├── cv-content/          # CV content management
+│   ├── entities/        # Database entities
+│   ├── dto/            # Data transfer objects
+│   ├── services/       # Business logic
+│   └── controllers/    # API endpoints
+├── user/               # User management
+├── upload/             # File upload handling
+├── template/           # CV templates
+├── config/             # Configuration files
+├── common/             # Shared utilities
+│   └── filters/        # Exception filters
+└── main.ts            # Application entry point
 ```
 
-## Test
+## Development
 
-```bash
-# unit tests
-$ npm run test
+### Available Scripts
+- `npm run start` - Start the application
+- `npm run start:dev` - Start in development mode with hot reload
+- `npm run start:debug` - Start in debug mode
+- `npm run build` - Build the application
+- `npm run test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run lint` - Run ESLint
 
-# e2e tests
-$ npm run test:e2e
+### Adding New Features
+1. Create the entity in the appropriate module
+2. Generate DTOs for data validation
+3. Implement service with business logic
+4. Create controller with API endpoints
+5. Add to module imports/exports
+6. Write tests
 
-# test coverage
-$ npm run test:cov
-```
+## Security Considerations
 
-## Support
+- JWT tokens with configurable expiration
+- Password hashing with bcrypt
+- Input validation on all endpoints
+- File upload validation
+- CORS configuration
+- Environment-based secrets
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Contributing
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the MIT License.
+
+## Support
+
+For support or questions, please open an issue in the repository.
