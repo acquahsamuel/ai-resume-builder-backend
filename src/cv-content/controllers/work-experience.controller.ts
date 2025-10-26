@@ -24,7 +24,7 @@ export class WorkExperienceController {
     @Request() req,
     @Body(ValidationPipe) createWorkExperienceDto: CreateWorkExperienceDto,
   ) {
-    return await this.workExperienceService.create(req.user.userId, createWorkExperienceDto);
+    return await this.workExperienceService.create(req.user.userId.toString(), createWorkExperienceDto);
   }
 
   @Get()
@@ -34,7 +34,7 @@ export class WorkExperienceController {
 
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() req) {
-    return await this.workExperienceService.findOne(id, req.user.userId);
+    return await this.workExperienceService.findOne(id, req.user.userId.toString());
   }
 
   @Patch(':id')
@@ -43,18 +43,18 @@ export class WorkExperienceController {
     @Request() req,
     @Body(ValidationPipe) updateWorkExperienceDto: Partial<CreateWorkExperienceDto>,
   ) {
-    return await this.workExperienceService.update(id, req.user.userId, updateWorkExperienceDto);
+    return await this.workExperienceService.update(id, req.user.userId.toString(), updateWorkExperienceDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req) {
-    await this.workExperienceService.remove(id, req.user.userId);
+    await this.workExperienceService.remove(id, req.user.userId.toString());
     return { message: 'Work experience deleted successfully' };
   }
 
   @Post('reorder')
   async reorder(@Request() req, @Body() body: { experienceIds: string[] }) {
-    await this.workExperienceService.reorderExperiences(req.user.userId, body.experienceIds);
+    await this.workExperienceService.reorderExperiences(req.user.userId.toString(), body.experienceIds);
     return { message: 'Work experiences reordered successfully' };
   }
 

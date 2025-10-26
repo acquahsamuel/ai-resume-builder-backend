@@ -1,4 +1,4 @@
-import { IsString, IsDateString, IsArray, IsOptional, IsNumber, Min, IsEnum } from 'class-validator';
+import { IsString, IsDateString, IsArray, IsOptional, IsNumber, Min, IsEnum, IsBoolean } from 'class-validator';
 import { GPAScale } from '../entities/education.entity';
 
 export class CreateEducationDto {
@@ -23,7 +23,7 @@ export class CreateEducationDto {
   endDate?: string;
 
   @IsOptional()
-  // @IsBoolean()
+  @IsBoolean()
   isOngoing?: boolean;
 
   @IsOptional()
