@@ -2,7 +2,7 @@
 
 ## 🚀 Complete Backend Implementation
 
-This CV Builder backend provides a comprehensive API for creating, managing, and customizing professional resumes/CVs. Built with NestJS, TypeORM, and MySQL.
+This CV Builder backend provides a comprehensive API for creating, managing, and customizing professional resumes/CVs. Built with NestJS, Mongoose, and MongoDB.
 
 ## ✅ Implemented Features
 
@@ -122,12 +122,14 @@ This CV Builder backend provides a comprehensive API for creating, managing, and
 
 ### Environment Variables
 ```env
-# Database
+# Database (MongoDB)
 DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=root
+DB_PORT=27017
+DB_USERNAME=your_username
 DB_PASSWORD=your_password
 DB_DATABASE=cleansheet_resume
+# Or use MongoDB URI directly
+MONGODB_URI=mongodb://localhost:27017/cleansheet_resume
 
 # Authentication
 JWT_SECRET=your-secret-key
@@ -163,8 +165,8 @@ SMTP_PASS=your-password
    ```
 
 3. **Database Setup**
-   - Create MySQL database
-   - Tables auto-created on first run
+   - Install and start MongoDB
+   - Collections auto-created on first run
 
 4. **Start Development**
    ```bash

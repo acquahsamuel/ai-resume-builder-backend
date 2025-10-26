@@ -1,106 +1,97 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Entity()
+export type CvContentDocument = CvContent & Document;
+
+@Schema({ timestamps: true })
 export class CvContent {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
+  @Prop({ required: true })
   userId: string;
 
-  @Column()
+  @Prop({ required: true })
   templateId: string;
 
-  @Column('json')
-  HeaderProfileInfo: {
-    firstname : string;
-    lastname : string;
-    othername : string;
+  @Prop({ type: Object, required: false })
+  HeaderProfileInfo?: {
+    firstname: string;
+    lastname: string;
+    othername: string;
     fullname: string;
     title: string;
     email: string;
     phone: string;
     address: string;
-    city : string;
-    country  : string;
-    postalCode : string;
-    dateOfBirth? : string;
+    city: string;
+    country: string;
+    postalCode: string;
+    dateOfBirth?: string;
     socialMedia: Array<{
-        platform: string;
-        link: string;
-      }>;
+      platform: string;
+      link: string;
+    }>;
   };
 
-  @Column('json')
-  ProfessionalSummary : {
-    summary : string;
-  }
+  @Prop({ type: Object, required: false })
+  ProfessionalSummary?: {
+    summary: string;
+  };
 
-  @Column('json')
-  Education: Array<{
+  @Prop({ type: [Object], required: false })
+  Education?: Array<{
     institution: string;
     degree: string;
     fieldOfStudy: string;
-    institutionWebsite? : string;
+    institutionWebsite?: string;
     startDate: string;
     endDate: string;
   }>;
 
-  @Column('json')
-  Experience: Array<{
+  @Prop({ type: [Object], required: false })
+  Experience?: Array<{
     company: string;
     position: string;
-    startDate: string;  
-    endDate: string;  
+    startDate: string;
+    endDate: string;
     responsibilities: string[];
   }>;
 
   // Skills section
-  @Column('json')
-  Skills: Array<{
-    skill : string;
-    proficiency : string;
+  @Prop({ type: [Object], required: false })
+  Skills?: Array<{
+    skill: string;
+    proficiency: string;
     level?: string;
-  }>
+  }>;
 
   // Certifications section
-  @Column('json')
-  Certifications: Array<{
+  @Prop({ type: [Object], required: false })
+  Certifications?: Array<{
     name: string;
     issuingOrganization: string;
     issueDate: string;
-    expirationDate?: string; 
-    credentialId?: string;  
-    summary? : string;
+    expirationDate?: string;
+    credentialId?: string;
+    summary?: string;
   }>;
 
-  
   // Hobbies section
-  @Column('json')
-  Hobbies : Array<{
-    hobby : string;
-  }>
+  @Prop({ type: [Object], required: false })
+  Hobbies?: Array<{
+    hobby: string;
+  }>;
 
- 
   // Reference section
- @Column('json')
-    Reference: Array<{
+  @Prop({ type: [Object], required: false })
+  Reference?: Array<{
     referenceName: string;
     contactPerson: string;
     contactPhone: string[];
     contactEmail?: string;
   }>;
 
-
   // Projects section
-  @Column('json')
-  Projects: Array<{
+  @Prop({ type: [Object], required: false })
+  Projects?: Array<{
     title: string;
     description: string;
     technologies: string[];
@@ -108,26 +99,22 @@ export class CvContent {
   }>;
 
   // Languages spoken
-  @Column('json')
-  Languages: Array<{
+  @Prop({ type: [Object], required: false })
+  Languages?: Array<{
     language: string;
     proficiency: 'Basic' | 'Intermediate' | 'Advanced' | 'Native';
   }>;
 
-
   // Additional sections (e.g., volunteering, awards)
-  @Column('json')
-  AdditionalSections: Array<{
+  @Prop({ type: [Object], required: false })
+  AdditionalSections?: Array<{
     sectionTitle: string;
     details: string;
   }>;
 
-
-
-  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  
-  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
+export const CvContentSchema = SchemaFactory.createForClass(CvContent);

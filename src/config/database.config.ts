@@ -1,14 +1,18 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { MongooseModuleOptions } from '@nestjs/mongoose';
 
-export const databaseConfig: TypeOrmModuleOptions = {
-  type: 'mysql',
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT) || 3306,
-  username: process.env.DB_USERNAME || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_DATABASE || 'cleansheet_resume',
-  autoLoadEntities: true,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-  synchronize: process.env.NODE_ENV !== 'production', // Only sync in development
-  logging: process.env.NODE_ENV === 'development',
+export const getMongoUri = (): string => {
+  const host = process.env.DB_HOST || 'localhost';
+  const port = process.env.DB_PORT || '27017';
+  const database = process.env.DB_DATABASE || 'cleansheet_resume';
+  const username = process.env.DB_USERNAME;
+  const password = process.env.DB_PASSWORD;
+
+  if (username && password) {
+    return `mongodb://${username}:${password}@${host}:${port}/${database}`;
+  }
+  return `mongodb://${host}:${port}/${database}`;
+};
+
+export const mongooseConfig: MongooseModuleOptions = {
+  uri: process.env.MONGODB_URI || getMongoUri(),
 };

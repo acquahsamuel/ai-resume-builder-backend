@@ -1,59 +1,46 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Entity()
+export type WorkExperienceDocument = WorkExperience & Document;
+
+@Schema({ timestamps: true })
 export class WorkExperience {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
+  @Prop({ required: true, index: true })
   userId: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'userId' })
-  user: User;
-
-  @Column()
+  @Prop({ required: true })
   jobTitle: string;
 
-  @Column()
+  @Prop({ required: true })
   company: string;
 
-  @Column({ nullable: true })
-  city: string;
+  @Prop({ required: false })
+  city?: string;
 
-  @Column({ nullable: true })
-  country: string;
+  @Prop({ required: false })
+  country?: string;
 
-  @Column({ type: 'date' })
+  @Prop({ type: Date, required: true })
   startDate: Date;
 
-  @Column({ type: 'date', nullable: true })
-  endDate: Date;
+  @Prop({ type: Date, required: false })
+  endDate?: Date;
 
-  @Column({ default: false })
+  @Prop({ default: false })
   currentlyWorking: boolean;
 
-  @Column('json', { nullable: true })
-  jobDescriptions: string[];
+  @Prop({ type: [String], required: false })
+  jobDescriptions?: string[];
 
-  @Column('text', { nullable: true })
-  summary: string;
+  @Prop({ type: String, required: false })
+  summary?: string;
 
-  @Column({ default: 0 })
+  @Prop({ default: 0 })
   sortOrder: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
+export const WorkExperienceSchema = SchemaFactory.createForClass(WorkExperience);

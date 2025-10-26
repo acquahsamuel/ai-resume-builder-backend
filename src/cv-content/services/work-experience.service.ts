@@ -1,36 +1,36 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { WorkExperience } from '../entities/work-experience.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { WorkExperience, WorkExperienceDocument } from '../entities/work-experience.entity';
 import { CreateWorkExperienceDto } from '../dto/create-work-experience.dto';
 
 @Injectable()
 export class WorkExperienceService {
   constructor(
-    @InjectRepository(WorkExperience)
-    private readonly workExperienceRepository: Repository<WorkExperience>,
+    @InjectModel(WorkExperience.name)
+    private readonly workExperienceModel: Model<WorkExperienceDocument>,
   ) {}
 
   async create(userId: number, createWorkExperienceDto: CreateWorkExperienceDto): Promise<WorkExperience> {
-    const workExperience = this.workExperienceRepository.create({
+    const workExperience = new this.workExperienceModel({
       ...createWorkExperienceDto,
       userId,
     });
 
-    return await this.workExperienceRepository.save(workExperience);
+    return await workExperience.save();
   }
 
-  async findAllByUser(userId: number): Promise<WorkExperience[]> {
-    return await this.workExperienceRepository.find({
-      where: { userId },
-      order: { sortOrder: 'ASC', startDate: 'DESC' },
-    });
-  }
+  // async findAllByUser(userId: number): Promise<WorkExperience[]> {
+  //   return await this.workExperienceModel.find({ userId })
+  //     .sort({ sortOrder: 'ASC', startDate: 'DESC' })
+  //     .exec();
+  // }
 
-  async findOne(id: number, userId: number): Promise<WorkExperience> {
-    const workExperience = await this.workExperienceRepository.findOne({
-      where: { id, userId },
-    });
+  async findOne(id: string, userId: number): Promise<WorkExperience> {
+    const workExperience = await this.workExperienceModel.findOne({
+      _id: id,
+      userId,
+    }).exec();
 
     if (!workExperience) {
       throw new NotFoundException('Work experience not found');
@@ -39,25 +39,33 @@ export class WorkExperienceService {
     return workExperience;
   }
 
-  async update(id: number, userId: number, updateData: Partial<CreateWorkExperienceDto>): Promise<WorkExperience> {
-    const workExperience = await this.findOne(id, userId);
+  async update(id: string, userId: number, updateData: Partial<CreateWorkExperienceDto>): Promise<WorkExperience> {
+    const workExperience = await this.workExperienceModel.findOneAndUpdate(
+      { _id: id, userId },
+      updateData,
+      { new: true }
+    ).exec();
     
-    Object.assign(workExperience, updateData);
-    return await this.workExperienceRepository.save(workExperience);
-  }
-
-  async remove(id: number, userId: number): Promise<void> {
-    const workExperience = await this.findOne(id, userId);
-    await this.workExperienceRepository.remove(workExperience);
-  }
-
-  async reorderExperiences(userId: number, experienceIds: number[]): Promise<void> {
-    for (let i = 0; i < experienceIds.length; i++) {
-      await this.workExperienceRepository.update(
-        { id: experienceIds[i], userId },
-        { sortOrder: i }
-      );
+    if (!workExperience) {
+      throw new NotFoundException('Work experience not found');
     }
+
+    return workExperience;
+  }
+
+  async remove(id: string, userId: number): Promise<void> {
+    const workExperience = await this.findOne(id, userId);
+    await this.workExperienceModel.findByIdAndDelete(id).exec();
+  }
+
+  async reorderExperiences(userId: number, experienceIds: string[]): Promise<void> {
+    const updates = experienceIds.map((id, index) => 
+      this.workExperienceModel.updateOne(
+        { _id: id, userId },
+        { sortOrder: index }
+      ).exec()
+    );
+    await Promise.all(updates);
   }
 
   async generateJobDescription(jobTitle: string, company: string): Promise<string[]> {

@@ -4,10 +4,10 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TemplateModule } from './template/template.module';
 import { UserModule } from './user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { CvContentModule } from './cv-content/cv-content.module';
 import { NodemailerModule } from './nodemailer/nodemailer.module';
-import { databaseConfig } from './config/database.config';
+import { mongooseConfig } from './config/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { UploadModule } from './upload/upload.module';
 
@@ -17,7 +17,7 @@ import { UploadModule } from './upload/upload.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRoot(databaseConfig),
+    MongooseModule.forRoot(mongooseConfig.uri),
     AuthModule,
     TemplateModule,
     UserModule,

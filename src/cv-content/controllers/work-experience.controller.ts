@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   Request,
-  ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
 import { WorkExperienceService } from '../services/work-experience.service';
@@ -30,17 +29,17 @@ export class WorkExperienceController {
 
   @Get()
   async findAll(@Request() req) {
-    return await this.workExperienceService.findAllByUser(req.user.userId);
+    // return await this.workExperienceService.findAllByUser(req.user.userId);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number, @Request() req) {
+  async findOne(@Param('id') id: string, @Request() req) {
     return await this.workExperienceService.findOne(id, req.user.userId);
   }
 
   @Patch(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Request() req,
     @Body(ValidationPipe) updateWorkExperienceDto: Partial<CreateWorkExperienceDto>,
   ) {
@@ -48,13 +47,13 @@ export class WorkExperienceController {
   }
 
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number, @Request() req) {
+  async remove(@Param('id') id: string, @Request() req) {
     await this.workExperienceService.remove(id, req.user.userId);
     return { message: 'Work experience deleted successfully' };
   }
 
   @Post('reorder')
-  async reorder(@Request() req, @Body() body: { experienceIds: number[] }) {
+  async reorder(@Request() req, @Body() body: { experienceIds: string[] }) {
     await this.workExperienceService.reorderExperiences(req.user.userId, body.experienceIds);
     return { message: 'Work experiences reordered successfully' };
   }

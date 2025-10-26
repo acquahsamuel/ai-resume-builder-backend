@@ -1,10 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export enum TemplateCategory {
   MODERN = 'Modern',
@@ -14,25 +9,24 @@ export enum TemplateCategory {
   PROFESSIONAL = 'Professional',
 }
 
-@Entity()
-export class CvTemplate {
-  @PrimaryGeneratedColumn()
-  id: number;
+export type CvTemplateDocument = CvTemplate & Document;
 
-  @Column()
+@Schema({ timestamps: true })
+export class CvTemplate {
+  @Prop({ required: true })
   name: string;
 
-  @Column({ nullable: true })
-  description: string;
+  @Prop({ required: false })
+  description?: string;
 
-  @Column({
-    type: 'enum',
+  @Prop({
+    type: String,
     enum: TemplateCategory,
     default: TemplateCategory.MODERN
   })
   category: TemplateCategory;
 
-  @Column('json')
+  @Prop({ type: Object, required: true })
   layout: {
     sections: string[];
     sectionOrder: string[];
@@ -49,27 +43,27 @@ export class CvTemplate {
     };
   };
 
-  @Column('json', { nullable: true })
-  previewImage: {
+  @Prop({ type: Object, required: false })
+  previewImage?: {
     url: string;
     alt: string;
   };
 
-  @Column({ default: false })
+  @Prop({ default: false })
   isPremium: boolean;
 
-  @Column({ default: true })
+  @Prop({ default: true })
   isActive: boolean;
 
-  @Column({ default: 0 })
+  @Prop({ default: 0 })
   usageCount: number;
 
-  @Column({ type: 'decimal', precision: 3, scale: 2, default: 0 })
+  @Prop({ type: Number, default: 0 })
   rating: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
+export const CvTemplateSchema = SchemaFactory.createForClass(CvTemplate);

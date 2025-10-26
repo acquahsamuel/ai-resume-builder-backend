@@ -1,6 +1,6 @@
 # CV Builder Backend API
 
-A comprehensive backend API for a CV/Resume builder application built with NestJS, TypeORM, and MySQL.
+A comprehensive backend API for a CV/Resume builder application built with NestJS, Mongoose, and MongoDB.
 
 ## Features
 
@@ -41,13 +41,13 @@ A comprehensive backend API for a CV/Resume builder application built with NestJ
 - Global exception handling
 - Input validation with class-validator
 - CORS configuration
-- Database relationships with TypeORM
+- NoSQL database with Mongoose
 - Standardized API responses
 
 ## Tech Stack
 
 - **Framework**: NestJS
-- **Database**: MySQL with TypeORM
+- **Database**: MongoDB with Mongoose
 - **Authentication**: JWT + Passport
 - **File Upload**: Multer
 - **Validation**: class-validator, class-transformer
@@ -73,9 +73,9 @@ A comprehensive backend API for a CV/Resume builder application built with NestJ
    ```
 
 4. **Database Setup**
-   - Create a MySQL database
+   - Install and start MongoDB on your system
    - Update database credentials in `.env`
-   - The application will automatically create tables on first run
+   - The application will automatically create collections on first run
 
 5. **Start the application**
    ```bash
@@ -92,12 +92,14 @@ A comprehensive backend API for a CV/Resume builder application built with NestJ
 Create a `.env` file based on `.env.example`:
 
 ```env
-# Database Configuration
+# Database Configuration (MongoDB)
 DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=root
+DB_PORT=27017
+DB_USERNAME=your_username
 DB_PASSWORD=your_password
 DB_DATABASE=cleansheet_resume
+# Or use MongoDB URI directly
+MONGODB_URI=mongodb://localhost:27017/cleansheet_resume
 
 # JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key

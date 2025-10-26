@@ -1,13 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
 export enum SkillLevel {
   BEGINNER = 'Beginner',
@@ -23,44 +15,39 @@ export enum SkillCategory {
   OTHER = 'Other'
 }
 
-@Entity()
-export class Skill {
-  @PrimaryGeneratedColumn()
-  id: number;
+export type SkillDocument = Skill & Document;
 
-  @Column()
+@Schema({ timestamps: true })
+export class Skill {
+  @Prop({ required: true, index: true })
   userId: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'userId' })
-  user: User;
-
-  @Column()
+  @Prop({ required: true })
   name: string;
 
-  @Column({
-    type: 'enum',
+  @Prop({
+    type: String,
     enum: SkillLevel,
     default: SkillLevel.INTERMEDIATE
   })
   level: SkillLevel;
 
-  @Column({
-    type: 'enum',
+  @Prop({
+    type: String,
     enum: SkillCategory,
     default: SkillCategory.TECHNICAL
   })
   category: SkillCategory;
 
-  @Column({ type: 'int', nullable: true })
-  proficiencyRating: number;
+  @Prop({ type: Number, required: false })
+  proficiencyRating?: number;
 
-  @Column({ default: 0 })
+  @Prop({ default: 0 })
   sortOrder: number;
 
-  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
+export const SkillSchema = SchemaFactory.createForClass(Skill);

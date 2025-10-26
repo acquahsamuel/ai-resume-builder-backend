@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { TemplateController } from './template.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Template } from './entities/template.entity';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { Template, TemplateSchema } from './entities/template.entity';
 
 @Module({
-  imports : [
-    TypeOrmModule.forFeature([Template]),
+  imports: [
+    MongooseModule.forFeature([{ name: Template.name, schema: TemplateSchema }])
   ],
   controllers: [TemplateController],
   providers: [TemplateService],
 })
 
 export class TemplateModule {}
-
-
- 

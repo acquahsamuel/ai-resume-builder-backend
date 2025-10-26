@@ -1,35 +1,28 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Entity()
+export type TemplateDocument = Template & Document;
+
+@Schema({ timestamps: true })
 export class Template {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
+  @Prop({ required: true })
   templateName: string;
 
-  @Column()
+  @Prop({ required: true })
   thumbnail: string;
 
-  @Column('text')
+  @Prop({ type: String, required: true })
   html: string;
 
-
-  @Column({ default: false })
+  @Prop({ default: false })
   isOnlyForSubscribers: boolean;
 
-  @Column({ default : 'template-sheet'})
+  @Prop({ default: 'template-sheet' })
   slug: string;
 
-  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
+export const TemplateSchema = SchemaFactory.createForClass(Template);

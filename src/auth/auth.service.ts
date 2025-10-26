@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User, UserDocument } from 'src/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -9,8 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) 
-    private readonly authRepository: Repository<User>,
+    @InjectModel(User.name) 
+    private readonly authModel: Model<UserDocument>,
     private jwtService : JwtService,
   ) {}
 
@@ -20,11 +20,11 @@ export class AuthService {
    */
   async register(email: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = this.authRepository.create({
+    const user = new this.authModel({
       email,
       password: hashedPassword,
     });
-    return this.authRepository.save(user);
+    return user.save();
   }
 
 
@@ -33,7 +33,7 @@ export class AuthService {
   async login(email: string, password: string) {
     const user = await this.findByEmail(email);
     if (user && await bcrypt.compare(password, user.password)) {
-      const payload = { email: user.email, sub: user.id };
+      const payload = { email: user.email, sub: (user as any)._id.toString() };
       return {
         token: this.jwtService.sign(payload),
         message : 'Login successful',
@@ -64,7 +64,7 @@ export class AuthService {
 
 
   async forgotPassword(email: string) {
-    const user = await this.authRepository.findOne({ where: { email } });
+    const user = await this.authModel.findOne({ email }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -85,13 +85,13 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired token');
     }
 
-    const user = await this.authRepository.findOne({ where: { email: decoded.email } });
+    const user = await this.authModel.findOne({ email: decoded.email }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
-    await this.authRepository.save(user);
+    await user.save();
     return { message: 'Password reset successful' };
 
   }
@@ -103,13 +103,13 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired token');
     }
 
-    const user = await this.authRepository.findOne({ where: { email: decoded.email } });
+    const user = await this.authModel.findOne({ email: decoded.email }).exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
     user.isVerified = true;
-    await this.authRepository.save(user);
+    await user.save();
     return { message: 'Email verified successfully' };
   }
 
@@ -117,7 +117,7 @@ export class AuthService {
 
 
   async resendEmailVerification(email: string) {
-    const user = await this.authRepository.findOne({ where: { email } });
+    const user = await this.authModel.findOne({ email }).exec();
     if (!user || user.isVerified) {
       throw new BadRequestException('User not found or already verified');
     }
@@ -125,15 +125,15 @@ export class AuthService {
     const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1h' });
     const verificationLink = `http://yourapp.com/verify-email?token=${token}`;
 
-    // await this.authRepository.sendEmail(user.email, 'Email Verification', verificationLink);
+    // await this.authModel.sendEmail(user.email, 'Email Verification', verificationLink);
     return { message: 'Verification email resent' };
   }
 
 
 
   
-  async getLoggedInUserProfile(id: number) {
-    const user = await this.authRepository.findOne({ where: { id } });
+  async getLoggedInUserProfile(id: string) {
+    const user = await this.authModel.findById(id).exec();
     if (!user) {
       throw new Error('User not found');
     }
@@ -148,6 +148,6 @@ export class AuthService {
 
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return await this.authRepository.findOne({ where: { email } });
+    return await this.authModel.findOne({ email }).exec();
   }
 }

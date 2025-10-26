@@ -19,17 +19,17 @@ export class CvContentController {
 
   @Get(':id')
   findCVById(@Param('id') id: string) {
-    return this.cvContentService.findCV(+id);
+    return this.cvContentService.findCV(id);
   }
 
   @Patch(':id')
   updateCV(@Param('id') id: string, @Body() updateCvContentDto: UpdateCvContentDto) {
-    return this.cvContentService.updateCV(+id, updateCvContentDto);
+    return this.cvContentService.updateCV(id, updateCvContentDto);
   }
 
   @Delete(':id')
   deleteCV(@Param('id') id: string) {
-    return this.cvContentService.deleteCV(+id);
+    return this.cvContentService.deleteCV(id);
   }
 
 

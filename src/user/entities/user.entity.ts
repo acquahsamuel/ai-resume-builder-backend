@@ -1,74 +1,67 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 import { Exclude } from 'class-transformer';
 
-@Entity()
+export type UserDocument = User & Document;
+
+@Schema({ timestamps: true })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Prop({ required: false })
+  firstname?: string;
 
-  @Column({ nullable: true })
-  firstname: string;
+  @Prop({ required: false })
+  lastname?: string;
 
-  @Column({ nullable: true })
-  lastname: string;
-
-  @Column({ unique: true })
+  @Prop({ required: true, unique: true })
   email: string;
 
   @Exclude()
-  @Column()
+  @Prop({ required: true })
   password: string;
 
-  @Column({ default: 'user' })
+  @Prop({ default: 'user' })
   role: string;
 
-  @Column({ nullable: true })
-  photo: string;
+  @Prop({ required: false })
+  photo?: string;
 
-  @Column({ nullable: true })
-  phone: string;
+  @Prop({ required: false })
+  phone?: string;
 
   // CV Builder specific fields
-  @Column({ nullable: true })
-  city: string;
+  @Prop({ required: false })
+  city?: string;
 
-  @Column({ nullable: true })
-  country: string;
+  @Prop({ required: false })
+  country?: string;
 
-  @Column({ nullable: true })
-  postalCode: string;
+  @Prop({ required: false })
+  postalCode?: string;
 
-  @Column({ nullable: true })
-  address: string;
+  @Prop({ required: false })
+  address?: string;
 
-  @Column({ nullable: true })
-  title: string; // Professional title
+  @Prop({ required: false })
+  title?: string; // Professional title
 
-  @Column({ nullable: true })
-  dateOfBirth: Date;
+  @Prop({ required: false })
+  dateOfBirth?: Date;
 
-  @Column('json', { nullable: true })
-  socialMedia: Array<{
+  @Prop({ type: [Object], required: false })
+  socialMedia?: Array<{
     platform: string;
     link: string;
   }>;
 
-  @Column({ nullable: true })
-  googleId: string; // For Google OAuth
+  @Prop({ required: false })
+  googleId?: string; // For Google OAuth
 
-  @Column({ default: false })
+  @Prop({ default: false })
   isVerified: boolean;
 
-  @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);
