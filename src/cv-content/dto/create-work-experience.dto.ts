@@ -1,4 +1,5 @@
-import { IsString, IsDateString, IsBoolean, IsArray, IsOptional, IsNumber, Min } from 'class-validator';
+import { IsString, IsDateString, IsBoolean, IsArray, IsOptional, IsNumber, Min, IsEnum } from 'class-validator';
+import { EmploymentType } from '../entities/work-experience.entity';
 
 export class CreateWorkExperienceDto {
   @IsString()
@@ -9,11 +10,11 @@ export class CreateWorkExperienceDto {
 
   @IsOptional()
   @IsString()
-  city?: string;
+  location?: string;
 
   @IsOptional()
-  @IsString()
-  country?: string;
+  @IsEnum(EmploymentType)
+  employmentType?: EmploymentType;
 
   @IsDateString()
   startDate: string;
@@ -24,19 +25,33 @@ export class CreateWorkExperienceDto {
 
   @IsOptional()
   @IsBoolean()
-  currentlyWorking?: boolean;
+  isCurrent?: boolean;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
 
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  jobDescriptions?: string[];
+  achievements?: string[];
 
   @IsOptional()
-  @IsString()
-  summary?: string;
+  @IsArray()
+  @IsString({ each: true })
+  responsibilities?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  technologies?: string[];
 
   @IsOptional()
   @IsNumber()
   @Min(0)
-  sortOrder?: number;
+  order?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  aiGenerated?: boolean;
 }

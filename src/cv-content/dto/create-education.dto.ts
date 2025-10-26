@@ -1,4 +1,5 @@
-import { IsString, IsDateString, IsArray, IsOptional, IsNumber, Min, IsUrl } from 'class-validator';
+import { IsString, IsDateString, IsArray, IsOptional, IsNumber, Min, IsEnum } from 'class-validator';
+import { GPAScale } from '../entities/education.entity';
 
 export class CreateEducationDto {
   @IsString()
@@ -11,16 +12,8 @@ export class CreateEducationDto {
   fieldOfStudy: string;
 
   @IsOptional()
-  @IsUrl()
-  institutionWebsite?: string;
-
-  @IsOptional()
   @IsString()
-  city?: string;
-
-  @IsOptional()
-  @IsString()
-  country?: string;
+  location?: string;
 
   @IsDateString()
   startDate: string;
@@ -30,30 +23,37 @@ export class CreateEducationDto {
   endDate?: string;
 
   @IsOptional()
+  // @IsBoolean()
+  isOngoing?: boolean;
+
+  @IsOptional()
+  @IsNumber()
+  gpa?: number;
+
+  @IsOptional()
+  @IsEnum(GPAScale)
+  gpaScale?: GPAScale;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  honors?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  relevantCoursework?: string[];
+
+  @IsOptional()
   @IsString()
-  gpa?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  coursework?: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  extracurricularActivities?: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  honorsAndAwards?: string[];
+  activities?: string;
 
   @IsOptional()
   @IsString()
-  description?: string;
+  thesis?: string;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
-  sortOrder?: number;
+  order?: number;
 }

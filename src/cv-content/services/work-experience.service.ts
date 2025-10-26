@@ -11,7 +11,7 @@ export class WorkExperienceService {
     private readonly workExperienceModel: Model<WorkExperienceDocument>,
   ) {}
 
-  async create(userId: number, createWorkExperienceDto: CreateWorkExperienceDto): Promise<WorkExperience> {
+  async create(userId: string, createWorkExperienceDto: CreateWorkExperienceDto): Promise<WorkExperience> {
     const workExperience = new this.workExperienceModel({
       ...createWorkExperienceDto,
       userId,
@@ -26,7 +26,7 @@ export class WorkExperienceService {
   //     .exec();
   // }
 
-  async findOne(id: string, userId: number): Promise<WorkExperience> {
+  async findOne(id: string, userId: string): Promise<WorkExperience> {
     const workExperience = await this.workExperienceModel.findOne({
       _id: id,
       userId,
@@ -39,7 +39,7 @@ export class WorkExperienceService {
     return workExperience;
   }
 
-  async update(id: string, userId: number, updateData: Partial<CreateWorkExperienceDto>): Promise<WorkExperience> {
+  async update(id: string, userId: string, updateData: Partial<CreateWorkExperienceDto>): Promise<WorkExperience> {
     const workExperience = await this.workExperienceModel.findOneAndUpdate(
       { _id: id, userId },
       updateData,
@@ -53,16 +53,16 @@ export class WorkExperienceService {
     return workExperience;
   }
 
-  async remove(id: string, userId: number): Promise<void> {
+  async remove(id: string, userId: string): Promise<void> {
     const workExperience = await this.findOne(id, userId);
     await this.workExperienceModel.findByIdAndDelete(id).exec();
   }
 
-  async reorderExperiences(userId: number, experienceIds: string[]): Promise<void> {
+  async reorderExperiences(userId: string, experienceIds: string[]): Promise<void> {
     const updates = experienceIds.map((id, index) => 
       this.workExperienceModel.updateOne(
         { _id: id, userId },
-        { sortOrder: index }
+        { order: index }
       ).exec()
     );
     await Promise.all(updates);
