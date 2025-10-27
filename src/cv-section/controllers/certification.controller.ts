@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { CertificationService } from '../services/certification.service';
-import { CreateCertificationDto } from '../dto/create-certification.dto';
+import { CertificationService } from '../../cv-content/services/certification.service';
+import { CreateCertificationDto } from '../../cv-content/dto/create-certification.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/certifications')

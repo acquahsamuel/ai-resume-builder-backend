@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { AwardService } from '../services/award.service';
-import { CreateAwardDto } from '../dto/create-award.dto';
+import { AwardService } from '../../cv-content/services/award.service';
+import { CreateAwardDto } from '../../cv-content/dto/create-award.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/awards')

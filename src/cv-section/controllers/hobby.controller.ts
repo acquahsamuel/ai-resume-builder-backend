@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { HobbyService } from '../services/hobby.service';
-import { CreateHobbyDto } from '../dto/create-hobby.dto';
+import { HobbyService } from '../../cv-content/services/hobby.service';
+import { CreateHobbyDto } from '../../cv-content/dto/create-hobby.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/hobbies')

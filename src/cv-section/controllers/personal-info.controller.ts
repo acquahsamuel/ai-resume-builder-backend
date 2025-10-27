@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { PersonalInfoService } from '../services/personal-info.service';
-import { CreatePersonalInfoDto } from '../dto/create-personal-info.dto';
+import { PersonalInfoService } from '../../cv-content/services/personal-info.service';
+import { CreatePersonalInfoDto } from '../../cv-content/dto/create-personal-info.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/personal-info')

@@ -10,8 +10,8 @@ import {
   Request,
   ValidationPipe,
 } from '@nestjs/common';
-import { WorkExperienceService } from '../services/work-experience.service';
-import { CreateWorkExperienceDto } from '../dto/create-work-experience.dto';
+import { WorkExperienceService } from '../../cv-content/services/work-experience.service';
+import { CreateWorkExperienceDto } from '../../cv-content/dto/create-work-experience.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/work-experience')

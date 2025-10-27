@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe, Put } from '@nestjs/common';
-import { EducationService } from '../services/education.service';
-import { CreateEducationDto } from '../dto/create-education.dto';
+import { EducationService } from '../../cv-content/services/education.service';
+import { CreateEducationDto } from '../../cv-content/dto/create-education.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/education')

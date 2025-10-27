@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { ProjectService } from '../services/project.service';
-import { CreateProjectDto } from '../dto/create-project.dto';
+import { ProjectService } from '../../cv-content/services/project.service';
+import { CreateProjectDto } from '../../cv-content/dto/create-project.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/projects')

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { SkillService } from '../services/skill.service';
-import { CreateSkillDto } from '../dto/create-skill.dto';
+import { SkillService } from '../../cv-content/services/skill.service';
+import { CreateSkillDto } from '../../cv-content/dto/create-skill.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/skills')

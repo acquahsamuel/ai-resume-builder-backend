@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { PatentService } from '../services/patent.service';
-import { CreatePatentDto } from '../dto/create-patent.dto';
+import { PatentService } from '../../cv-content/services/patent.service';
+import { CreatePatentDto } from '../../cv-content/dto/create-patent.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/patents')

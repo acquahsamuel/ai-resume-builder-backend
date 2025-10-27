@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { LanguageService } from '../services/language.service';
-import { CreateLanguageDto } from '../dto/create-language.dto';
+import { LanguageService } from '../../cv-content/services/language.service';
+import { CreateLanguageDto } from '../../cv-content/dto/create-language.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/languages')

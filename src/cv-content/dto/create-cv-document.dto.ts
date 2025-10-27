@@ -548,8 +548,8 @@ class AdditionalSectionDto {
   details: string;
 }
 
-// Main Create CvContent DTO
-export class CreateCvContentDto {
+// Main Create CvDocument DTO
+export class CreateCvDocumentDto {
   @IsString()
   userId: string;
 

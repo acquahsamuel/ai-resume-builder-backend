@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { VolunteerService } from '../services/volunteer.service';
-import { CreateVolunteerDto } from '../dto/create-volunteer.dto';
+import { VolunteerService } from '../../cv-content/services/volunteer.service';
+import { CreateVolunteerDto } from '../../cv-content/dto/create-volunteer.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/volunteer')

@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CvContentService } from './cv-content.service';
-import { CvContentController } from './cv-content.controller';
+import { CvDocumentService } from './cv-document.service';
+import { CvDocumentController } from './cv-document.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
 
 // Entities
-import { CvContent, CvContentSchema } from './entities/cv-content.entity';
+import { CvDocument, CvDocumentSchema } from './entities/cv-document.entity';
 import { WorkExperience, WorkExperienceSchema } from './entities/work-experience.entity';
 import { Education, EducationSchema } from './entities/education.entity';
 import { Skill, SkillSchema } from './entities/skill.entity';
@@ -40,26 +40,26 @@ import { PersonalInfoService } from './services/personal-info.service';
 import { ProfessionalSummaryService } from './services/professional-summary.service';
 
 // Controllers
-import { WorkExperienceController } from './controllers/work-experience.controller';
-import { EducationController } from './controllers/education.controller';
-import { SkillController } from './controllers/skill.controller';
-import { CertificationController } from './controllers/certification.controller';
-import { ProjectController } from './controllers/project.controller';
-import { LanguageController } from './controllers/language.controller';
-import { VolunteerController } from './controllers/volunteer.controller';
-import { PublicationController } from './controllers/publication.controller';
-import { AwardController } from './controllers/award.controller';
-import { ReferenceController } from './controllers/reference.controller';
-import { HobbyController } from './controllers/hobby.controller';
-import { PatentController } from './controllers/patent.controller';
-import { CourseController } from './controllers/course.controller';
-import { PersonalInfoController } from './controllers/personal-info.controller';
-import { ProfessionalSummaryController } from './controllers/professional-summary.controller';
+import { WorkExperienceController } from '../cv-section/controllers/work-experience.controller';
+import { EducationController } from '../cv-section/controllers/education.controller';
+import { SkillController } from '../cv-section/controllers/skill.controller';
+import { CertificationController } from '../cv-section/controllers/certification.controller';
+import { ProjectController } from '../cv-section/controllers/project.controller';
+import { LanguageController } from '../cv-section/controllers/language.controller';
+import { VolunteerController } from '../cv-section/controllers/volunteer.controller';
+import { PublicationController } from '../cv-section/controllers/publication.controller';
+import { AwardController } from '../cv-section/controllers/award.controller';
+import { ReferenceController } from '../cv-section/controllers/reference.controller';
+import { HobbyController } from '../cv-section/controllers/hobby.controller';
+import { PatentController } from '../cv-section/controllers/patent.controller';
+import { CourseController } from '../cv-section/controllers/course.controller';
+import { PersonalInfoController } from '../cv-section/controllers/personal-info.controller';
+import { ProfessionalSummaryController } from '../cv-section/controllers/professional-summary.controller';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: CvContent.name, schema: CvContentSchema },
+      { name: CvDocument.name, schema: CvDocumentSchema },
       { name: WorkExperience.name, schema: WorkExperienceSchema },
       { name: Education.name, schema: EducationSchema },
       { name: Skill.name, schema: SkillSchema },
@@ -79,7 +79,7 @@ import { ProfessionalSummaryController } from './controllers/professional-summar
     AuthModule,
   ],
   controllers: [
-    CvContentController,
+    CvDocumentController,
     WorkExperienceController,
     EducationController,
     SkillController,
@@ -97,7 +97,7 @@ import { ProfessionalSummaryController } from './controllers/professional-summar
     ProfessionalSummaryController,
   ],
   providers: [
-    CvContentService,
+    CvDocumentService,
     WorkExperienceService,
     EducationService,
     SkillService,
@@ -115,7 +115,7 @@ import { ProfessionalSummaryController } from './controllers/professional-summar
     ProfessionalSummaryService,
   ],
   exports: [
-    CvContentService,
+    CvDocumentService,
     WorkExperienceService,
     EducationService,
     SkillService,

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { ProfessionalSummaryService } from '../services/professional-summary.service';
-import { CreateProfessionalSummaryDto } from '../dto/create-professional-summary.dto';
+import { ProfessionalSummaryService } from '../../cv-content/services/professional-summary.service';
+import { CreateProfessionalSummaryDto } from '../../cv-content/dto/create-professional-summary.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/professional-summary')

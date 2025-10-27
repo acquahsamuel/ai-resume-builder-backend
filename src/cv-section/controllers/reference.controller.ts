@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { ReferenceService } from '../services/reference.service';
-import { CreateReferenceDto } from '../dto/create-reference.dto';
+import { ReferenceService } from '../../cv-content/services/reference.service';
+import { CreateReferenceDto } from '../../cv-content/dto/create-reference.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/references')

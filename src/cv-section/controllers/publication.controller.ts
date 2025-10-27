@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
-import { PublicationService } from '../services/publication.service';
-import { CreatePublicationDto } from '../dto/create-publication.dto';
+import { PublicationService } from '../../cv-content/services/publication.service';
+import { CreatePublicationDto } from '../../cv-content/dto/create-publication.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('api/v1/cv/publications')

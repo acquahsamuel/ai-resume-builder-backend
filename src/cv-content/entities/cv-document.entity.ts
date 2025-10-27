@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type CvContentDocument = CvContent & Document;
+export type CvDocumentDocument = CvDocument & Document;
 
 @Schema({ timestamps: true })
-export class CvContent {
+export class CvDocument {
   @Prop({ required: true })
   userId: string;
 
@@ -224,4 +224,4 @@ export class CvContent {
   updatedAt: Date;
 }
 
-export const CvContentSchema = SchemaFactory.createForClass(CvContent);
+export const CvDocumentSchema = SchemaFactory.createForClass(CvDocument);
