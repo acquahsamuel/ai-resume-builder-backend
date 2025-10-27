@@ -11,18 +11,18 @@ export class CvDocumentService {
   constructor(
     @InjectModel(CvDocument.name)
     private readonly cvDocumentModel: Model<CvDocumentDocument>,
-  ) {}
+  ) { }
 
   async createCV(createCvDocumentDto: CreateCvDocumentDto) {
     const document = new this.cvDocumentModel(createCvDocumentDto);
     return document.save();
   }
 
-  async findAllCV() : Promise<CvDocument[]> {
+  async findAllCV(): Promise<CvDocument[]> {
     return await this.cvDocumentModel.find().exec();
   }
 
-  async findCV(id: string) : Promise<CvDocument> {
+  async findCV(id: string): Promise<CvDocument> {
     return await this.cvDocumentModel.findById(id).exec();
   }
 
@@ -31,11 +31,10 @@ export class CvDocumentService {
   }
 
   async deleteCV(id: string) {
-     return await this.cvDocumentModel.findByIdAndDelete(id).exec();
+    return await this.cvDocumentModel.findByIdAndDelete(id).exec();
   }
 
   async getAllUserCV() {
     return await this.cvDocumentModel.find().exec();
   }
-
 }

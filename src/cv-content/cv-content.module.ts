@@ -133,4 +133,4 @@ import { ProfessionalSummaryController } from '../cv-section/controllers/profess
     ProfessionalSummaryService,
   ],
 })
-export class CvContentModule {}
+export class CvContentModule { }
