@@ -26,6 +26,9 @@ FRONTEND_URL=https://your-frontend.com
 
 Format: `mongodb+srv://user:pass@cluster.mongodb.net/dbname`
 
-## Deploy
+## Deploy on Render
 
-Add the environment variables to your platform (Render/Heroku/etc.), then redeploy.
+**Build Command**: `npm install && npm run build`  
+**Start Command**: `npm run start:prod`
+
+Add the environment variables in Render dashboard, then redeploy.
