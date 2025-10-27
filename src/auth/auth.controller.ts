@@ -12,33 +12,22 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-
-export class LoginDto {
-  email: string;
-  password: string;
-}
-
-export class ForgotPasswordDto {
-  email: string;
-}
-
-export class ResetPasswordDto {
-  token: string;
-  newPassword: string;
-}
+import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('api/v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body(ValidationPipe) body: { email: string; password: string }) {
+  async register(@Body() body: RegisterDto) {
     return this.authService.register(body.email, body.password);
   }
 
   @Post('login')
-  async login(@Body(ValidationPipe) body: LoginDto) {
+  async login(@Body() body: LoginDto) {
     return this.authService.login(body.email, body.password);
   }
 
@@ -60,12 +49,12 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body(ValidationPipe) body: ForgotPasswordDto) {
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
     return this.authService.forgotPassword(body.email);
   }
 
   @Post('reset-password')
-  async resetPassword(@Body(ValidationPipe) body: ResetPasswordDto) {
+  async resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.resetPassword(body.token, body.newPassword);
   }
 

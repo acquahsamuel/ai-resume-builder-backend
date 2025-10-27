@@ -44,10 +44,8 @@ async function bootstrap() {
 
   // Global exception filter
   app.useGlobalFilters(new AllExceptionsFilter());
-
   await app.listen(PORT, () => {
-    console.log(`🚀 CV Builder API is running on port ${PORT}`);
-    console.log(`📁 Static files served from: /uploads/`);
+    console.log(`🚀 Workport API is running on port ${PORT}`);
     console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }

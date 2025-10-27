@@ -1,0 +1,97 @@
+{
+  "info": {
+    "_postman_id": "templates",
+    "name": "Templates",
+    "description": "CV template management endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Templates",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}"
+            }
+          ]
+        },
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/templates",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "templates"]
+        }
+      }
+    },
+    {
+      "name": "Get Template by ID",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}"
+            }
+          ]
+        },
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/templates/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "templates", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Template",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Modern Template\",\n  \"description\": \"A modern CV template\",\n  \"previewImage\": \"https://example.com/preview.jpg\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/templates",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "templates"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ]
+}
+

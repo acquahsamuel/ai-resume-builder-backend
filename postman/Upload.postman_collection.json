@@ -1,0 +1,93 @@
+{
+  "info": {
+    "_postman_id": "upload",
+    "name": "File Upload",
+    "description": "File upload endpoints for profiles and documents",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Upload Profile Image",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          " visualization": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "type",
+              "value": "profile",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/upload",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "upload"]
+        }
+      }
+    },
+    {
+      "name": "Upload Document",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{authToken}}"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "type",
+              "value": "document",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/upload",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "upload"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ]
+}
+
