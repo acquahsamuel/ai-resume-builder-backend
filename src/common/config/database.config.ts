@@ -1,25 +1,10 @@
 import { MongooseModuleOptions } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv';
 
-export const getMongoUri = (): string => {
-  if (process.env.MONGODB_URI) {
-    return process.env.MONGODB_URI;
-  }
+dotenv.config();
 
-  const host = process.env.DB_HOST || 'localhost';
-  const port = process.env.DB_PORT || '27017';
-  const database = process.env.DB_DATABASE || 'cleansheet_resume';
-  const username = process.env.DB_USERNAME;
-  const password = process.env.DB_PASSWORD;
-
-  if (username && password) {
-    const encodedUsername = encodeURIComponent(username);
-    const encodedPassword = encodeURIComponent(password);
-    return `mongodb://${encodedUsername}:${encodedPassword}@${host}:${port}/${database}`;
-  }
-  return `mongodb://${host}:${port}/${database}`;
+const mongooseConfig: MongooseModuleOptions = {
+  uri: process.env.MONGO_DB_URI || 'mongodb://127.0.0.1:27017/cleansheet_resume',
 };
 
-// Connection options for production
-export const mongooseConfig: MongooseModuleOptions = {
-  uri: getMongoUri(),
-};
+export default mongooseConfig;
