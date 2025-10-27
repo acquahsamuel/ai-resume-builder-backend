@@ -3,13 +3,13 @@ import { CreateTemplateDto } from './dto/create-template.dto';
 import { UpdateTemplateDto } from './dto/update-template.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Template, TemplateDocument } from './entities/template.entity';
+import { CvTemplate, CvTemplateDocument } from './entities/cv-template.entity';
 
 @Injectable()
 export class TemplateService {
   constructor(
-    @InjectModel(Template.name)
-    private readonly templateModel: Model<TemplateDocument>,
+    @InjectModel(CvTemplate.name)
+    private readonly templateModel: Model<CvTemplateDocument>,
   ) {}
 
   
@@ -18,7 +18,7 @@ export class TemplateService {
    * @param createTemplateDto The template data to create.
    * @returns The created template.
    */
-  async create(createTemplateDto: CreateTemplateDto): Promise<Template> {
+  async create(createTemplateDto: CreateTemplateDto): Promise<CvTemplate> {
     const template = new this.templateModel(createTemplateDto);
     return template.save();
   }
@@ -27,7 +27,7 @@ export class TemplateService {
    * Retrieve all templates from the database.
    * @returns An array of templates.
    */
-  async findAll(): Promise<Template[]> {
+  async findAll(): Promise<CvTemplate[]> {
     return await this.templateModel.find().exec();
   }
 
@@ -36,7 +36,7 @@ export class TemplateService {
    * @param id The ID of the template to find.
    * @returns The template.
    */
-  async findOne(id: string): Promise<Template> {
+  async findOne(id: string): Promise<CvTemplate> {
     return await this.templateModel.findById(id).exec();
   }
 

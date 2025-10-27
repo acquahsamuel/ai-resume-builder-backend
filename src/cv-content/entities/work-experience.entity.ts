@@ -1,12 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+export enum EmploymentType {
+  FULL_TIME = 'full-time',
+  PART_TIME = 'part-time',
+  CONTRACT = 'contract',
+  FREELANCE = 'freelance',
+  INTERNSHIP = 'internship'
+}
+
 export type WorkExperienceDocument = WorkExperience & Document;
 
 @Schema({ timestamps: true })
 export class WorkExperience {
   @Prop({ required: true, index: true })
-  userId: number;
+  userId: string;
 
   @Prop({ required: true })
   jobTitle: string;
@@ -15,10 +23,14 @@ export class WorkExperience {
   company: string;
 
   @Prop({ required: false })
-  city?: string;
+  location?: string;
 
-  @Prop({ required: false })
-  country?: string;
+  @Prop({
+    type: String,
+    enum: EmploymentType,
+    default: EmploymentType.FULL_TIME
+  })
+  employmentType: EmploymentType;
 
   @Prop({ type: Date, required: true })
   startDate: Date;
@@ -27,16 +39,25 @@ export class WorkExperience {
   endDate?: Date;
 
   @Prop({ default: false })
-  currentlyWorking: boolean;
+  isCurrent: boolean;
+
+  @Prop({ required: false })
+  description?: string;
 
   @Prop({ type: [String], required: false })
-  jobDescriptions?: string[];
+  achievements?: string[];
 
-  @Prop({ type: String, required: false })
-  summary?: string;
+  @Prop({ type: [String], required: false })
+  responsibilities?: string[];
+
+  @Prop({ type: [String], required: false })
+  technologies?: string[];
 
   @Prop({ default: 0 })
-  sortOrder: number;
+  order: number;
+
+  @Prop({ default: false })
+  aiGenerated: boolean;
 
   createdAt: Date;
 

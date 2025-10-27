@@ -1,12 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+export enum GPAScale {
+  SCALE_4 = '4.0',
+  SCALE_5 = '5.0',
+  SCALE_100 = '100'
+}
+
 export type EducationDocument = Education & Document;
 
 @Schema({ timestamps: true })
 export class Education {
   @Prop({ required: true, index: true })
-  userId: number;
+  userId: string;
 
   @Prop({ required: true })
   institution: string;
@@ -18,13 +24,7 @@ export class Education {
   fieldOfStudy: string;
 
   @Prop({ required: false })
-  institutionWebsite?: string;
-
-  @Prop({ required: false })
-  city?: string;
-
-  @Prop({ required: false })
-  country?: string;
+  location?: string;
 
   @Prop({ type: Date, required: true })
   startDate: Date;
@@ -32,23 +32,33 @@ export class Education {
   @Prop({ type: Date, required: false })
   endDate?: Date;
 
+  @Prop({ default: false })
+  isOngoing: boolean;
+
   @Prop({ required: false })
-  gpa?: string;
+  gpa?: number;
+
+  @Prop({
+    type: String,
+    enum: GPAScale,
+    default: GPAScale.SCALE_4
+  })
+  gpaScale: GPAScale;
 
   @Prop({ type: [String], required: false })
-  coursework?: string[];
+  honors?: string[];
 
   @Prop({ type: [String], required: false })
-  extracurricularActivities?: string[];
+  relevantCoursework?: string[];
 
-  @Prop({ type: [String], required: false })
-  honorsAndAwards?: string[];
+  @Prop({ required: false })
+  activities?: string;
 
-  @Prop({ type: String, required: false })
-  description?: string;
+  @Prop({ required: false })
+  thesis?: string;
 
   @Prop({ default: 0 })
-  sortOrder: number;
+  order: number;
 
   createdAt: Date;
 
