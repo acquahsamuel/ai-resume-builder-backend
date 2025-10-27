@@ -6,8 +6,7 @@ import { TemplateModule } from './template/template.module';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CvContentModule } from './cv-content/cv-content.module';
-import { NodemailerModule } from './nodemailer/nodemailer.module';
-import { mongooseConfig } from './config/database.config';
+import { mongooseConfig } from './common/config/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { UploadModule } from './upload/upload.module';
 
@@ -22,7 +21,6 @@ import { UploadModule } from './upload/upload.module';
     TemplateModule,
     UserModule,
     CvContentModule,
-    NodemailerModule,
     UploadModule
   ],
   controllers: [AppController],

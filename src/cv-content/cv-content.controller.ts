@@ -3,7 +3,7 @@ import { CvContentService } from './cv-content.service';
 import { CreateCvContentDto } from './dto/create-cv-content.dto';
 import { UpdateCvContentDto } from './dto/update-cv-content.dto';
 
-@Controller('api/v1/cv')
+@Controller('api/v1/cv-content')
 export class CvContentController {
   constructor(private readonly cvContentService: CvContentService) { }
 
@@ -34,7 +34,7 @@ export class CvContentController {
 
 
   @Get('my-cvs')
-  getAllUserCV(@Param('id') id: string) {
+  getAllUserCV() {
     return this.cvContentService.getAllUserCV();
   }
 
