@@ -7,8 +7,8 @@ export class CreateProfessionalSummaryDto {
 
   @IsString()
   @MinLength(50)
-  @MaxLength(500)
-  content: string;
+  @MaxLength(1000)
+  summary: string;
 
   @IsOptional()
   @IsBoolean()

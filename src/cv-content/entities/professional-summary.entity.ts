@@ -21,7 +21,10 @@ export class ProfessionalSummary {
   summaryType: SummaryType;
 
   @Prop({ required: true })
-  content: string;
+  summary: string;
+
+  @Prop({ required: false })
+  content?: string;
 
   @Prop({ default: false })
   aiGenerated: boolean;
