@@ -1,7 +1,6 @@
 import { MongooseModuleOptions } from '@nestjs/mongoose';
 
 export const getMongoUri = (): string => {
-  // Prioritize MONGODB_URI for production (e.g., MongoDB Atlas connection string)
   if (process.env.MONGODB_URI) {
     return process.env.MONGODB_URI;
   }
@@ -18,15 +17,7 @@ export const getMongoUri = (): string => {
   return `mongodb://${host}:${port}/${database}`;
 };
 
+// Connection options for production
 export const mongooseConfig: MongooseModuleOptions = {
   uri: getMongoUri(),
-  retryWrites: true,
-  w: 'majority',
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
-  connectTimeoutMS: 30000,
-  maxPoolSize: 10,
-  minPoolSize: 5,
-  retryAttempts: 10,
-  retryDelay: 3000,
 };
