@@ -1,53 +1,40 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import * as process from "process";
-import * as dotenv from 'dotenv';
-import * as cors from 'cors';
-import { AllExceptionsFilter } from './common/filters/http-exception.filter';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import { ValidationPipe } from "@nestjs/common";
+import * as cors from "cors";
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create(AppModule);
   const PORT = process.env.PORT || 3000;
-  
-  // Configure CORS
+
+  // Enable CORS
   app.use(
     cors({
       origin: [
-        'http://localhost:4200',
-        'http://localhost:3000',
-        'http://localhost:3001',
-        process.env.FRONTEND_URL,
-      ].filter(Boolean),
-      credentials: true,
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
-    }),
+        "http://localhost:8080",
+        "http://localhost:4200",
+        "http://localhost:3000",
+      ],
+    })
   );
 
-  // Serve static files (for uploaded files)
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads/',
-  });
-
   // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-    disableErrorMessages: false,
-  }));
+  app.useGlobalPipes(new ValidationPipe());
 
-  // Global exception filter
-  app.useGlobalFilters(new AllExceptionsFilter());
-  await app.listen(PORT, () => {
-    console.log(`🚀 Workport API is running on port ${PORT}`);
-    console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+  // Base endpoint
+  app.use("/", (req, res, next) => {
+    if (req.path === "/" && req.method === "GET") {
+      res.json({ message: "Cleansheet ai-builder backend service" });
+    } else {
+      next();
+    }
   });
+
+  await app.listen(PORT);
+  console.log(`Cleansheet ai-builder backend service running on port ${PORT}`);
 }
 
 bootstrap();
