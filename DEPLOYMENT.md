@@ -20,11 +20,11 @@ FRONTEND_URL=https://your-frontend.com
 
 1. Go to https://www.mongodb.com/cloud/atlas
 2. Create free cluster
-3. Create database user
+3. Create database user (avoid special characters in password)
 4. Whitelist IP: `0.0.0.0/0` (allow all)
 5. Copy connection string from "Connect" → "Connect your application"
 
-Format: `mongodb+srv://user:pass@cluster.mongodb.net/dbname`
+**⚠️ Important**: Use the full `MONGODB_URI` (recommended). If your password has special characters, URL-encode them in your MONGODB_URI.
 
 ## Deploy on Render
 

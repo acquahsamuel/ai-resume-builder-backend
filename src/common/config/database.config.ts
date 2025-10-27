@@ -12,7 +12,9 @@ export const getMongoUri = (): string => {
   const password = process.env.DB_PASSWORD;
 
   if (username && password) {
-    return `mongodb://${username}:${password}@${host}:${port}/${database}`;
+    const encodedUsername = encodeURIComponent(username);
+    const encodedPassword = encodeURIComponent(password);
+    return `mongodb://${encodedUsername}:${encodedPassword}@${host}:${port}/${database}`;
   }
   return `mongodb://${host}:${port}/${database}`;
 };
