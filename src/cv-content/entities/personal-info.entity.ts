@@ -14,7 +14,7 @@ export type PersonalInfoDocument = PersonalInfo & Document;
 
 @Schema({ timestamps: true })
 export class PersonalInfo {
-  @Prop({ required: true, unique: true, index: true })
+  @Prop({ required: true, unique: true })
   userId: string;
 
   @Prop({ required: true })
