@@ -68,3 +68,8 @@ export class Skill {
 }
 
 export const SkillSchema = SchemaFactory.createForClass(Skill);
+
+// Add indexes for query optimization
+SkillSchema.index({ userId: 1, order: 1 });
+SkillSchema.index({ userId: 1, category: 1 });
+SkillSchema.index({ userId: 1, isHighlighted: 1 });

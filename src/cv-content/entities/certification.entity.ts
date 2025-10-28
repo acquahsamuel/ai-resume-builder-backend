@@ -45,3 +45,7 @@ export class Certification {
 
 export const CertificationSchema = SchemaFactory.createForClass(Certification);
 
+// Add indexes for query optimization
+CertificationSchema.index({ userId: 1, order: 1 });
+CertificationSchema.index({ userId: 1, issueDate: -1 });
+

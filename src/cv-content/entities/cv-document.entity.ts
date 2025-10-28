@@ -225,3 +225,8 @@ export class CvDocument {
 }
 
 export const CvDocumentSchema = SchemaFactory.createForClass(CvDocument);
+
+// Add indexes for query optimization
+CvDocumentSchema.index({ userId: 1 });
+CvDocumentSchema.index({ templateId: 1 });
+CvDocumentSchema.index({ createdAt: -1 });

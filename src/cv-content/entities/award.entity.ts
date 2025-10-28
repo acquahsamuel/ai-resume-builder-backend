@@ -30,3 +30,7 @@ export class Award {
 
 export const AwardSchema = SchemaFactory.createForClass(Award);
 
+// Add indexes for query optimization
+AwardSchema.index({ userId: 1, order: 1 });
+AwardSchema.index({ userId: 1, date: -1 });
+

@@ -14,10 +14,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    const user = await this.authService.getLoggedInUserProfile(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException();
+    // Validate JWT payload without querying database on every request
+    // User data is already in the JWT payload for efficiency
+    if (!payload || !payload.sub || !payload.email) {
+      throw new UnauthorizedException('Invalid token payload');
     }
-    return { userId: payload.sub, email: payload.email, user };
+    
+    // Only return minimal user data from JWT to avoid DB queries
+    // If full user data is needed, fetch it in the controller/service layer
+    return { 
+      userId: payload.sub, 
+      email: payload.email 
+    };
   }
 }

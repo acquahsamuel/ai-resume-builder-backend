@@ -65,3 +65,8 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// Add indexes for query optimization
+// Note: email is already indexed due to unique: true constraint
+UserSchema.index({ googleId: 1 });
+UserSchema.index({ createdAt: -1 });

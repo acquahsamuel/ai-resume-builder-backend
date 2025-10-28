@@ -48,3 +48,7 @@ export class Volunteer {
 
 export const VolunteerSchema = SchemaFactory.createForClass(Volunteer);
 
+// Add indexes for query optimization
+VolunteerSchema.index({ userId: 1, order: 1 });
+VolunteerSchema.index({ userId: 1, startDate: -1 });
+

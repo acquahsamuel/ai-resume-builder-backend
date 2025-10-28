@@ -18,26 +18,26 @@ export class CvDocumentController {
 
   @Get()
   findAll(@Request() req) {
-    return this.cvDocumentService.findAllCV();
+    return this.cvDocumentService.findAllCV(req.user.userId);
   }
 
   @Get(':id')
   findCVById(@Param('id') id: string, @Request() req) {
-    return this.cvDocumentService.findCV(id);
+    return this.cvDocumentService.findCV(id, req.user.userId);
   }
 
   @Patch(':id')
   updateCV(@Param('id') id: string, @Body() updateCvDocumentDto: UpdateCvDocumentDto, @Request() req) {
-    return this.cvDocumentService.updateCV(id, updateCvDocumentDto);
+    return this.cvDocumentService.updateCV(id, req.user.userId, updateCvDocumentDto);
   }
 
   @Delete(':id')
   deleteCV(@Param('id') id: string, @Request() req) {
-    return this.cvDocumentService.deleteCV(id);
+    return this.cvDocumentService.deleteCV(id, req.user.userId);
   }
 
   @Get('my-cvs')
   getAllUserCV(@Request() req) {
-    return this.cvDocumentService.getAllUserCV();
+    return this.cvDocumentService.getAllUserCV(req.user.userId);
   }
 }

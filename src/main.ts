@@ -21,8 +21,15 @@ async function bootstrap() {
     })
   );
 
-  // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe());
+  // Global validation pipe with optimized configuration
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true, // Strip properties that don't have decorators
+    forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are present
+    transform: true, // Transform payloads to DTO instances
+    transformOptions: {
+      enableImplicitConversion: true, // Enable implicit type conversion
+    },
+  }));
 
   // Base endpoint
   app.use("/", (req, res, next) => {

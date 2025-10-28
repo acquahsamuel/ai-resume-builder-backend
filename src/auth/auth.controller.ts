@@ -40,6 +40,7 @@ export class AuthController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getUserProfile(@Request() req) {
+    // Now we need to fetch user data since JWT strategy no longer does it
     return this.authService.getLoggedInUserProfile(req.user.userId);
   }
 

@@ -45,3 +45,7 @@ export class Publication {
 
 export const PublicationSchema = SchemaFactory.createForClass(Publication);
 
+// Add indexes for query optimization
+PublicationSchema.index({ userId: 1, order: 1 });
+PublicationSchema.index({ userId: 1, publicationDate: -1 });
+

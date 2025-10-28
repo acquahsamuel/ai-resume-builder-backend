@@ -231,3 +231,9 @@ export class CvTemplate {
 }
 
 export const CvTemplateSchema = SchemaFactory.createForClass(CvTemplate);
+
+// Add indexes for query optimization
+CvTemplateSchema.index({ category: 1 });
+CvTemplateSchema.index({ isActive: 1, isPremium: 1 });
+CvTemplateSchema.index({ usageCount: -1 });
+CvTemplateSchema.index({ createdAt: -1 });

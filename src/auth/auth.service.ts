@@ -135,7 +135,7 @@ export class AuthService {
   async getLoggedInUserProfile(id: string) {
     const user = await this.authModel.findById(id).exec();
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     return user;
   }
