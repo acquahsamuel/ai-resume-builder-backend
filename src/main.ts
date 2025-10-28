@@ -5,14 +5,13 @@ import * as cors from "cors";
 import * as dotenv from "dotenv";
 
 dotenv.config();
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const PORT = process.env.PORT || 3000;
 
   // Production optimizations
   if (process.env.NODE_ENV === 'production') {
-    Error.stackTraceLimit = 20; 
+    Error.stackTraceLimit = 20;
   }
 
   // Enable CORS
@@ -28,11 +27,11 @@ async function bootstrap() {
 
   // Global validation pipe with optimized configuration
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true, // Strip properties that don't have decorators
-    forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are present
-    transform: true, // Transform payloads to DTO instances
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
     transformOptions: {
-      enableImplicitConversion: true, // Enable implicit type conversion
+      enableImplicitConversion: true,
     },
   }));
 
