@@ -10,6 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const PORT = process.env.PORT || 3000;
 
+  // Production optimizations
+  if (process.env.NODE_ENV === 'production') {
+    Error.stackTraceLimit = 20; 
+  }
+
   // Enable CORS
   app.use(
     cors({
