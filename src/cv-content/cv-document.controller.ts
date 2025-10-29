@@ -1,7 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { CvDocumentService } from './cv-document.service';
-import { CreateCvDocumentDto } from './dto/create-cv-document.dto';
-import { UpdateCvDocumentDto } from './dto/update-cv-document.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/role.guard';
 import { Roles } from '../common/decorators/roles.decorator';
@@ -11,13 +9,6 @@ import { Roles } from '../common/decorators/roles.decorator';
 @Roles('user', 'admin')
 export class CvDocumentController {
   constructor(private readonly cvDocumentService: CvDocumentService) { }
-
-  @Post()
-  create(@Body() createCvDocumentDto: CreateCvDocumentDto, @Request() req) {
-    // Add userId from JWT token
-    createCvDocumentDto.userId = req.user.userId;
-    return this.cvDocumentService.createCV(createCvDocumentDto);
-  }
 
   @Get()
   findAll(@Request() req) {
@@ -52,11 +43,6 @@ export class CvDocumentController {
   @Get(':id')
   findCVById(@Param('id') id: string, @Request() req) {
     return this.cvDocumentService.findCV(id, req.user.userId);
-  }
-
-  @Patch(':id')
-  updateCV(@Param('id') id: string, @Body() updateCvDocumentDto: UpdateCvDocumentDto, @Request() req) {
-    return this.cvDocumentService.updateCV(id, req.user.userId, updateCvDocumentDto);
   }
 
   @Delete(':id')

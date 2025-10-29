@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCvDocumentDto } from './dto/create-cv-document.dto';
-import { UpdateCvDocumentDto } from './dto/update-cv-document.dto';
 import { CvDocument, CvDocumentDocument } from './entities/cv-document.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -43,24 +41,6 @@ export class CvDocumentService {
     private readonly referenceService: ReferenceService,
   ) { }
 
-  async createCV(createCvDocumentDto: CreateCvDocumentDto) {
-    // If this is set as default, unset other defaults for this user
-    if (createCvDocumentDto.isDefault) {
-      await this.cvDocumentModel.updateMany(
-        { userId: createCvDocumentDto.userId },
-        { $set: { isDefault: false } }
-      ).exec();
-    }
-
-    // Set default title if not provided
-    if (!createCvDocumentDto.title) {
-      createCvDocumentDto.title = 'My Resume';
-    }
-
-    const document = new this.cvDocumentModel(createCvDocumentDto);
-    return document.save();
-  }
-
   async findAllCV(userId: string): Promise<CvDocument[]> {
     return await this.cvDocumentModel.find({ userId }).exec();
   }
@@ -72,19 +52,7 @@ export class CvDocumentService {
     }
     return cv;
   }
-
-  async updateCV(id: string, userId: string, updateCvDocumentDto: UpdateCvDocumentDto) {
-    const cv = await this.cvDocumentModel.findOneAndUpdate(
-      { _id: id, userId },
-      updateCvDocumentDto,
-      { new: true }
-    ).exec();
-    if (!cv) {
-      throw new NotFoundException('CV not found');
-    }
-    return cv;
-  }
-
+  
   async deleteCV(id: string, userId: string) {
     const result = await this.cvDocumentModel.findOneAndDelete({ _id: id, userId }).exec();
     if (!result) {
@@ -163,13 +131,7 @@ export class CvDocumentService {
         dateOfBirth: personalInfo.value.dateOfBirth?.toISOString().split('T')[0],
         nationality: personalInfo.value.nationality,
         profilePhoto: personalInfo.value.profilePhoto,
-        socialMedia: [
-          personalInfo.value.linkedIn && { platform: 'LinkedIn', link: personalInfo.value.linkedIn },
-          personalInfo.value.github && { platform: 'GitHub', link: personalInfo.value.github },
-          personalInfo.value.twitter && { platform: 'Twitter', link: personalInfo.value.twitter },
-          personalInfo.value.portfolio && { platform: 'Portfolio', link: personalInfo.value.portfolio },
-          personalInfo.value.website && { platform: 'Website', link: personalInfo.value.website },
-        ].filter(Boolean),
+        socialMedia: personalInfo.value.socialMedia || {},
       } : undefined;
 
       // Map ProfessionalSummary

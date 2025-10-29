@@ -1,4 +1,5 @@
-import { IsString, IsEmail, IsOptional, IsDateString } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsDateString, IsObject, IsArray, ValidateNested } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 
 export class CreatePersonalInfoDto {
   @IsString()
@@ -52,23 +53,29 @@ export class CreatePersonalInfoDto {
   nationality?: string;
 
   @IsOptional()
-  @IsString()
-  linkedIn?: string;
+  @Transform(({ value }) => {
+    // If it's an array, convert to key-value object
+    if (Array.isArray(value)) {
+      return value.reduce((acc, item) => {
+        if (item && item.platform && item.link) {
+          acc[item.platform] = item.link;
+        }
+        return acc;
+      }, {});
+    }
+    // If it's already an object, return as is
+    return value;
+  })
+  @IsObject()
+  socialMedia?: Record<string, string> | Array<{ platform: string; link: string }>;
+}
 
-  @IsOptional()
+// Supporting class for array validation (optional)
+class SocialMediaItemDto {
   @IsString()
-  portfolio?: string;
+  platform: string;
 
-  @IsOptional()
   @IsString()
-  github?: string;
-
-  @IsOptional()
-  @IsString()
-  twitter?: string;
-
-  @IsOptional()
-  @IsString()
-  website?: string;
+  link: string;
 }
 

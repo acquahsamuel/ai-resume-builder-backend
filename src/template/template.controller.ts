@@ -16,13 +16,7 @@ export class TemplateController {
   create(@Body() createTemplateDto: CreateTemplateDto) {
     return this.templateService.create(createTemplateDto);
   }
-
-  // @Post()
-  // @Roles('admin') // Only admin can create templates
-  // create(@Body() createTemplateDto: CreateTemplateDto) {
-  //   return this.templateService.create(createTemplateDto);
-  // }
-
+ 
   @Get()
   findAll() {
     return this.templateService.findAll();

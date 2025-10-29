@@ -46,10 +46,7 @@ export class CvDocument {
     dateOfBirth?: string;
     nationality?: string;
     profilePhoto?: string;
-    socialMedia: Array<{
-      platform: string;
-      link: string;
-    }>;
+    socialMedia?: Record<string, string>; 
   };
 
   // Professional Summary

@@ -1,15 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema({ timestamps: true })
-export class SocialMedia {
-  @Prop({ required: true })
-  platform: string;
-
-  @Prop({ required: true })
-  link: string;
-}
-
 export type PersonalInfoDocument = PersonalInfo & Document;
 
 @Schema({ timestamps: true })
@@ -59,20 +50,8 @@ export class PersonalInfo {
   @Prop({ required: false })
   nationality?: string;
 
-  @Prop({ required: false })
-  linkedIn?: string;
-
-  @Prop({ required: false })
-  portfolio?: string;
-
-  @Prop({ required: false })
-  github?: string;
-
-  @Prop({ required: false })
-  twitter?: string;
-
-  @Prop({ required: false })
-  website?: string;
+  @Prop({ type: Object, required: false })
+  socialMedia?: Record<string, string>;
 
   createdAt: Date;
 
