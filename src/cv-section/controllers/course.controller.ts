@@ -2,11 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { CourseService } from '../../cv-content/services/course.service';
 import { CreateCourseDto } from '../../cv-content/dto/create-course.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/courses')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class CourseController {
-  constructor(private readonly courseService: CourseService) {}
+  constructor(private readonly courseService: CourseService) { }
 
   @Post()
   async create(@Request() req, @Body(ValidationPipe) createCourseDto: CreateCourseDto) {

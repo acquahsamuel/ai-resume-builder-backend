@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ValidationPipe, Request } from '@nestjs/common';
 import { CertificationService } from '../../cv-content/services/certification.service';
 import { CreateCertificationDto } from '../../cv-content/dto/create-certification.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/certifications')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class CertificationController {
   constructor(private readonly certificationService: CertificationService) {}
 

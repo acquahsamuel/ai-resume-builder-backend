@@ -42,7 +42,7 @@ export class User {
   address?: string;
 
   @Prop({ required: false })
-  title?: string; // Professional title
+  title?: string; 
 
   @Prop({ required: false })
   dateOfBirth?: Date;

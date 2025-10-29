@@ -2,9 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { ProjectService } from '../../cv-content/services/project.service';
 import { CreateProjectDto } from '../../cv-content/dto/create-project.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/projects')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 

@@ -2,9 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { EducationService } from '../../cv-content/services/education.service';
 import { CreateEducationDto } from '../../cv-content/dto/create-education.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/education')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class EducationController {
   constructor(private readonly educationService: EducationService) {}
 

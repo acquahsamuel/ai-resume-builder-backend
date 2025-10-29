@@ -2,9 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { PublicationService } from '../../cv-content/services/publication.service';
 import { CreatePublicationDto } from '../../cv-content/dto/create-publication.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/publications')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class PublicationController {
   constructor(private readonly publicationService: PublicationService) {}
 

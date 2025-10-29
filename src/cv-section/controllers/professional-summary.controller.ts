@@ -2,11 +2,14 @@ import { Controller, Get, Post, Body, Patch, UseGuards, Request, ValidationPipe 
 import { ProfessionalSummaryService } from '../../cv-content/services/professional-summary.service';
 import { CreateProfessionalSummaryDto } from '../../cv-content/dto/create-professional-summary.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/professional-summary')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class ProfessionalSummaryController {
-  constructor(private readonly professionalSummaryService: ProfessionalSummaryService) {}
+  constructor(private readonly professionalSummaryService: ProfessionalSummaryService) { }
 
   @Post()
   async createOrUpdate(@Request() req, @Body(ValidationPipe) createProfessionalSummaryDto: CreateProfessionalSummaryDto) {

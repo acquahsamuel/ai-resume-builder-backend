@@ -1,11 +1,14 @@
-import { Controller,  Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
 import { CvDocumentService } from './cv-document.service';
 import { CreateCvDocumentDto } from './dto/create-cv-document.dto';
 import { UpdateCvDocumentDto } from './dto/update-cv-document.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/role.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv-document')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class CvDocumentController {
   constructor(private readonly cvDocumentService: CvDocumentService) { }
 

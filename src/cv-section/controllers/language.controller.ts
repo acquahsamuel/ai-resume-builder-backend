@@ -2,9 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { LanguageService } from '../../cv-content/services/language.service';
 import { CreateLanguageDto } from '../../cv-content/dto/create-language.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/languages')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class LanguageController {
   constructor(private readonly languageService: LanguageService) {}
 

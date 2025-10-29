@@ -8,7 +8,7 @@ dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 4200;
 
   // Production optimizations
   if (process.env.NODE_ENV === 'production') {
@@ -19,7 +19,6 @@ async function bootstrap() {
   app.use(
     cors({
       origin: [
-        "http://localhost:8080",
         "http://localhost:4200",
         "http://localhost:3000",
       ],
@@ -50,3 +49,4 @@ async function bootstrap() {
 }
 
 bootstrap();
+
