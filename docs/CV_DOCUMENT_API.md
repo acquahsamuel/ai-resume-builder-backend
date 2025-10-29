@@ -285,7 +285,7 @@ null
 
 Get all CV documents using a specific template.
 
-**Endpoint:** `GET /api/v1/cv-document/template/:templateId`
+**Endpoint:** `GET /api/v1/cvs/template/:templateId`
 
 **Path Parameters:**
 
