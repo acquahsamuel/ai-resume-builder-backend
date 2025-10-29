@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/role.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 
-@Controller('api/v1/cv-document')
+@Controller('api/v1/cvs')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('user', 'admin')
 export class CvDocumentController {
