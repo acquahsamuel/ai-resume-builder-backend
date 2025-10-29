@@ -6,40 +6,6 @@ This CV Builder backend provides a comprehensive API for creating, managing, and
 
 ## ✅ Implemented Features
 
-### 1. Authentication & Security
-- **JWT-based Authentication**: Secure login/logout with token refresh
-- **Password Management**: Hashing with bcrypt, password reset flow
-- **Email Verification**: User account verification system
-- **Protected Routes**: JWT guards on sensitive endpoints
-- **Google OAuth Ready**: Infrastructure for social authentication
-
-### 2. User Management
-- **Complete User Profiles**: Extended user entity with CV-specific fields
-- **Personal Information**: Contact details, location, social media links
-- **Profile Photos**: Secure file upload with validation
-- **Account Settings**: Update profile, change passwords
-
-### 3. CV Content Management
-
-#### Work Experience
-- **CRUD Operations**: Full create, read, update, delete functionality
-- **Rich Data Model**: Job title, company, location, dates, descriptions
-- **Current Position Tracking**: Mark ongoing employment
-- **Custom Ordering**: Drag-and-drop sort capability
-- **AI Integration Ready**: Job description generation framework
-
-#### Education
-- **Academic Records**: Institutions, degrees, fields of study
-- **Detailed Information**: GPA, coursework, activities, honors
-- **Multiple Entries**: Support for multiple educational backgrounds
-- **Flexible Dates**: Handle ongoing education
-
-#### Skills Management
-- **Categorized Skills**: Technical, Language, Soft Skills, Other
-- **Proficiency Levels**: Beginner to Expert with numeric ratings
-- **Custom Organization**: User-defined skill ordering
-- **Skill Assessment**: 1-10 rating system
-
 ### 4. Template System
 - **Multiple Layouts**: Modern, Classic, Creative, Minimalist styles
 - **Customizable Design**: Colors, fonts, spacing, margins

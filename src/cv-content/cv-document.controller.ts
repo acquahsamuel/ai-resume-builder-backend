@@ -24,6 +24,11 @@ export class CvDocumentController {
     return this.cvDocumentService.findAllCV(req.user.userId);
   }
 
+  @Get('generate')
+  generateCV(@Request() req) {
+    return this.cvDocumentService.generateCV(req.user.userId);
+  }
+
   @Get(':id')
   findCVById(@Param('id') id: string, @Request() req) {
     return this.cvDocumentService.findCV(id, req.user.userId);
@@ -43,4 +48,5 @@ export class CvDocumentController {
   getAllUserCV(@Request() req) {
     return this.cvDocumentService.getAllUserCV(req.user.userId);
   }
+
 }

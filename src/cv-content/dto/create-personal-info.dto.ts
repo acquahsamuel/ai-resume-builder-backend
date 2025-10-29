@@ -7,6 +7,10 @@ export class CreatePersonalInfoDto {
   @IsString()
   lastName: string;
 
+  @IsOptional()
+  @IsString()
+  otherName?: string;
+
   @IsEmail()
   email: string;
 

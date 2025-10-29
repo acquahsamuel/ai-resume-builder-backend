@@ -23,6 +23,9 @@ export class PersonalInfo {
   @Prop({ required: true })
   lastName: string;
 
+  @Prop({ required: false })
+  otherName?: string;
+
   @Prop({ required: true })
   email: string;
 
