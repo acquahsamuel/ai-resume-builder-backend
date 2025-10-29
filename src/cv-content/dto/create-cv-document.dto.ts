@@ -557,6 +557,28 @@ export class CreateCvDocumentDto {
   templateId: string;
 
   @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isDefault?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  enabledSections?: string[]; // e.g., ['HeaderProfileInfo', 'ProfessionalSummary', 'Experience']
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  sectionOrder?: string[]; // Custom order for sections
+
+  @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => HeaderProfileInfoDto)

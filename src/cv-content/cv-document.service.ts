@@ -44,6 +44,19 @@ export class CvDocumentService {
   ) { }
 
   async createCV(createCvDocumentDto: CreateCvDocumentDto) {
+    // If this is set as default, unset other defaults for this user
+    if (createCvDocumentDto.isDefault) {
+      await this.cvDocumentModel.updateMany(
+        { userId: createCvDocumentDto.userId },
+        { $set: { isDefault: false } }
+      ).exec();
+    }
+
+    // Set default title if not provided
+    if (!createCvDocumentDto.title) {
+      createCvDocumentDto.title = 'My Resume';
+    }
+
     const document = new this.cvDocumentModel(createCvDocumentDto);
     return document.save();
   }
@@ -84,8 +97,17 @@ export class CvDocumentService {
     return await this.cvDocumentModel.find({ userId }).sort({ createdAt: -1 }).exec();
   }
 
-  async generateCV(userId: string): Promise<Partial<CvDocument>> {
+  async generateCV(userId: string, cvId?: string): Promise<Partial<CvDocument>> {
     try {
+      // If cvId is provided, get the specific CV to check its configuration
+      let cvConfig: CvDocument | null = null;
+      if (cvId) {
+        cvConfig = await this.cvDocumentModel.findOne({ _id: cvId, userId }).exec();
+        if (!cvConfig) {
+          throw new NotFoundException('CV not found');
+        }
+      }
+
       // Fetch all sections in parallel
       const [
         personalInfo,
@@ -338,9 +360,8 @@ export class CvDocumentService {
           }))
         : undefined;
 
-      // Build aggregated CV document
-      const aggregatedCV: Partial<CvDocument> = {
-        userId,
+      // Build aggregated CV document with all sections
+      const allSections: Record<string, any> = {
         HeaderProfileInfo: headerProfileInfo,
         ProfessionalSummary: professionalSummaryData,
         Experience: experience,
@@ -358,9 +379,164 @@ export class CvDocumentService {
         References: referencesData,
       };
 
-      return aggregatedCV;
+      // If CV config exists, filter and reorder sections based on configuration
+      if (cvConfig) {
+        let finalSections: Record<string, any> = {};
+        let sectionOrder: string[] = [];
+
+        // Filter by enabled sections if specified
+        if (cvConfig.enabledSections && cvConfig.enabledSections.length > 0) {
+          cvConfig.enabledSections.forEach(sectionKey => {
+            if (allSections[sectionKey] !== undefined && allSections[sectionKey] !== null) {
+              finalSections[sectionKey] = allSections[sectionKey];
+            }
+          });
+        } else {
+          // If no enabledSections, include all sections that have data
+          Object.keys(allSections).forEach(key => {
+            if (allSections[key] !== undefined && allSections[key] !== null) {
+              finalSections[key] = allSections[key];
+            }
+          });
+        }
+
+        // Reorder based on sectionOrder if specified
+        if (cvConfig.sectionOrder && cvConfig.sectionOrder.length > 0) {
+          sectionOrder = cvConfig.sectionOrder;
+        } else {
+          sectionOrder = Object.keys(finalSections);
+        }
+
+        // Create ordered result
+        const orderedSections: Record<string, any> = {};
+        sectionOrder.forEach(key => {
+          if (finalSections[key] !== undefined) {
+            orderedSections[key] = finalSections[key];
+          }
+        });
+
+        // Add any remaining sections not in order list
+        Object.keys(finalSections).forEach(key => {
+          if (!orderedSections[key]) {
+            orderedSections[key] = finalSections[key];
+          }
+        });
+
+        return {
+          userId,
+          templateId: cvConfig.templateId,
+          title: cvConfig.title,
+          description: cvConfig.description,
+          enabledSections: cvConfig.enabledSections,
+          sectionOrder: cvConfig.sectionOrder,
+          ...orderedSections,
+        };
+      }
+
+      // If no CV config, return all sections in default order
+      return {
+        userId,
+        ...allSections,
+      };
     } catch (error) {
       throw new NotFoundException('Error generating CV document');
     }
+  }
+
+  // Set a CV as default for a user
+  async setDefaultCV(id: string, userId: string): Promise<CvDocument> {
+    // Unset all other defaults for this user
+    await this.cvDocumentModel.updateMany(
+      { userId },
+      { $set: { isDefault: false } }
+    ).exec();
+
+    // Set this CV as default
+    const cv = await this.cvDocumentModel.findOneAndUpdate(
+      { _id: id, userId },
+      { $set: { isDefault: true } },
+      { new: true }
+    ).exec();
+
+    if (!cv) {
+      throw new NotFoundException('CV not found');
+    }
+
+    return cv;
+  }
+
+  // Duplicate a CV
+  async duplicateCV(id: string, userId: string, newTitle?: string): Promise<CvDocument> {
+    const originalCV = await this.cvDocumentModel.findOne({ _id: id, userId }).exec();
+    
+    if (!originalCV) {
+      throw new NotFoundException('CV not found');
+    }
+
+    // Create a new CV from the original, excluding _id and timestamps
+    const cvData = originalCV.toObject();
+    delete cvData._id;
+    delete cvData.createdAt;
+    delete cvData.updatedAt;
+    cvData.title = newTitle || `${originalCV.title} (Copy)`;
+    cvData.isDefault = false; // Don't set duplicates as default
+
+    const duplicatedCV = new this.cvDocumentModel(cvData);
+    return duplicatedCV.save();
+  }
+
+  // Update section order for a CV
+  async updateSectionOrder(id: string, userId: string, sectionOrder: string[]): Promise<CvDocument> {
+    const cv = await this.cvDocumentModel.findOneAndUpdate(
+      { _id: id, userId },
+      { $set: { sectionOrder } },
+      { new: true }
+    ).exec();
+
+    if (!cv) {
+      throw new NotFoundException('CV not found');
+    }
+
+    return cv;
+  }
+
+  // Update enabled sections for a CV
+  async updateEnabledSections(id: string, userId: string, enabledSections: string[]): Promise<CvDocument> {
+    const cv = await this.cvDocumentModel.findOneAndUpdate(
+      { _id: id, userId },
+      { $set: { enabledSections } },
+      { new: true }
+    ).exec();
+
+    if (!cv) {
+      throw new NotFoundException('CV not found');
+    }
+
+    return cv;
+  }
+
+  // Get all CVs for a user by template
+  async getCVsByTemplate(userId: string, templateId: string): Promise<CvDocument[]> {
+    return await this.cvDocumentModel.find({ userId, templateId }).sort({ createdAt: -1 }).exec();
+  }
+
+  // Get default CV for a user
+  async getDefaultCV(userId: string): Promise<CvDocument | null> {
+    return await this.cvDocumentModel.findOne({ userId, isDefault: true }).exec();
+  }
+
+  // Update template for a CV
+  async updateTemplate(id: string, userId: string, templateId: string): Promise<CvDocument> {
+    const cv = await this.cvDocumentModel.findOneAndUpdate(
+      { _id: id, userId },
+      { $set: { templateId } },
+      { new: true }
+    ).exec();
+
+    if (!cv) {
+      throw new NotFoundException('CV not found');
+    }
+
+    return cv;
   }
 }
