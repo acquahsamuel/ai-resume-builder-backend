@@ -52,25 +52,15 @@ pids
 *.seed
 *.pid.lock
 
-
-.env 
-
-
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 
-
-.env.development
-.env.production
-
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+.env 
+.env.prod
+/.env.production
+/.env.prod
 
 
-./env.development
-
-
-/dist
+/Developers Portal_CommissionServices.html
+./Developers Portal_CommissionServices.html
