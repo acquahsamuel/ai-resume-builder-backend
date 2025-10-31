@@ -27,3 +27,6 @@ export class Hobby {
 
 export const HobbySchema = SchemaFactory.createForClass(Hobby);
 
+// Add indexes for query optimization
+HobbySchema.index({ userId: 1, order: 1 });
+

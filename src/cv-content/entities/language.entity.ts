@@ -64,3 +64,6 @@ export class Language {
 
 export const LanguageSchema = SchemaFactory.createForClass(Language);
 
+// Add indexes for query optimization
+LanguageSchema.index({ userId: 1, order: 1 });
+

@@ -36,3 +36,7 @@ export class Course {
 
 export const CourseSchema = SchemaFactory.createForClass(Course);
 
+// Add indexes for query optimization
+CourseSchema.index({ userId: 1, order: 1 });
+CourseSchema.index({ userId: 1, completionDate: -1 });
+

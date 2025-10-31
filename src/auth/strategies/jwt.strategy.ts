@@ -1,23 +1,39 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AuthService } from '../auth.service';
+import { ConfigService } from '@nestjs/config';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User, UserDocument } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly authService: AuthService) {
+  constructor(
+    private configService: ConfigService,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'your-secret-key', // Use environment variable
+      secretOrKey: configService.get<string>('JWT_SECRET') || 'your-secret-key',
     });
   }
 
   async validate(payload: any) {
-    const user = await this.authService.getLoggedInUserProfile(payload.sub);
-    if (!user) {
-      throw new UnauthorizedException();
+    if (!payload?.sub || !payload?.email) {
+      throw new UnauthorizedException('Invalid token payload');
     }
-    return { userId: payload.sub, email: payload.email, user };
+
+    // Fetch user to get current role
+    const user = await this.userModel.findById(payload.sub).exec();
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      role: user.role || 'user',
+    };
   }
 }

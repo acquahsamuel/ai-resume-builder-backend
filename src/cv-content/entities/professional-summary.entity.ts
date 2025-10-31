@@ -10,7 +10,7 @@ export type ProfessionalSummaryDocument = ProfessionalSummary & Document;
 
 @Schema({ timestamps: true })
 export class ProfessionalSummary {
-  @Prop({ required: true, unique: true, index: true })
+  @Prop({ required: true, unique: true })
   userId: string;
 
   @Prop({

@@ -4,15 +4,17 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { EmailService } from 'src/common/email/email.service';
 
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) 
+    @InjectModel(User.name)
     private readonly authModel: Model<UserDocument>,
-    private jwtService : JwtService,
-  ) {}
+    private jwtService: JwtService,
+    private emailService: EmailService,
+  ) { }
 
   /**
    * @param email The email of the user to register.
@@ -24,7 +26,14 @@ export class AuthService {
       email,
       password: hashedPassword,
     });
-    return user.save();
+    await user.save();
+
+    // Send verification email
+    const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1h' });
+    const verificationLink = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/verify-email?token=${token}`;
+    await this.emailService.sendVerificationEmail(user.email, verificationLink);
+
+    return user;
   }
 
 
@@ -36,7 +45,7 @@ export class AuthService {
       const payload = { email: user.email, sub: (user as any)._id.toString() };
       return {
         token: this.jwtService.sign(payload),
-        message : 'Login successful',
+        message: 'Login successful',
       };
     }
     throw new BadRequestException('Invalid credentials');
@@ -48,18 +57,22 @@ export class AuthService {
   }
 
 
-  async refreshToken(oldToken : string) {
-    const user = this.jwtService.verify(oldToken);  
- 
-    if (!user) {
-    throw new BadRequestException('Invalid token');
-  }
-  
-  const payload = { email: user.email, sub: user.sub }; 
-  return {
-    refresh_token: this.jwtService.sign(payload),
-    message: 'Token refreshed successfully',
-    };
+  async refreshToken(oldToken: string) {
+    try {
+      const decoded = this.jwtService.verify(oldToken);
+      
+      if (!decoded || !decoded.sub || !decoded.email) {
+        throw new BadRequestException('Invalid token payload');
+      }
+
+      const payload = { email: decoded.email, sub: decoded.sub };
+      return {
+        refresh_token: this.jwtService.sign(payload),
+        message: 'Token refreshed successfully',
+      };
+    } catch (error) {
+      throw new BadRequestException('Invalid or expired token');
+    }
   }
 
 
@@ -70,9 +83,9 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1h' });
-    const resetLink = `http://yourapp.com/reset-password?token=${token}`;
+    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/reset-password?token=${token}`;
 
-    // await this.emailService.sendEmail(user.email, 'Reset Password', resetLink);
+    await this.emailService.sendResetPasswordEmail(user.email, resetLink);
 
     return { message: 'Reset password link sent to your email' };
   }
@@ -80,37 +93,52 @@ export class AuthService {
 
 
   async resetPassword(token: string, newPassword: string) {
-    const decoded = this.jwtService.verify(token);
-    if (!decoded) {
+    try {
+      const decoded = this.jwtService.verify(token);
+      
+      if (!decoded || !decoded.email) {
+        throw new BadRequestException('Invalid token payload');
+      }
+
+      const user = await this.authModel.findOne({ email: decoded.email }).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      await user.save();
+      return { message: 'Password reset successful' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new BadRequestException('Invalid or expired token');
     }
-
-    const user = await this.authModel.findOne({ email: decoded.email }).exec();
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    user.password = await bcrypt.hash(newPassword, 10);
-    await user.save();
-    return { message: 'Password reset successful' };
-
   }
 
 
   async verifyEmail(token: string) {
-    const decoded = this.jwtService.verify(token);
-    if (!decoded) {
+    try {
+      const decoded = this.jwtService.verify(token);
+      
+      if (!decoded || !decoded.email) {
+        throw new BadRequestException('Invalid token payload');
+      }
+
+      const user = await this.authModel.findOne({ email: decoded.email }).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      user.isVerified = true;
+      await user.save();
+      return { message: 'Email verified successfully' };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
       throw new BadRequestException('Invalid or expired token');
     }
-
-    const user = await this.authModel.findOne({ email: decoded.email }).exec();
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    user.isVerified = true;
-    await user.save();
-    return { message: 'Email verified successfully' };
   }
 
 
@@ -123,28 +151,24 @@ export class AuthService {
     }
 
     const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1h' });
-    const verificationLink = `http://yourapp.com/verify-email?token=${token}`;
+    const verificationLink = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/verify-email?token=${token}`;
 
-    // await this.authModel.sendEmail(user.email, 'Email Verification', verificationLink);
+    await this.emailService.sendVerificationEmail(user.email, verificationLink);
     return { message: 'Verification email resent' };
   }
 
 
-
-  
   async getLoggedInUserProfile(id: string) {
     const user = await this.authModel.findById(id).exec();
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
     return user;
   }
 
-
-
- async updatePassword(){
+  async updatePassword() {
     return { message: 'Password updated successfully' };
- }
+  }
 
 
   async findByEmail(email: string): Promise<User | undefined> {

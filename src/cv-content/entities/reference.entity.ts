@@ -36,3 +36,6 @@ export class Reference {
 
 export const ReferenceSchema = SchemaFactory.createForClass(Reference);
 
+// Add indexes for query optimization
+ReferenceSchema.index({ userId: 1, order: 1 });
+

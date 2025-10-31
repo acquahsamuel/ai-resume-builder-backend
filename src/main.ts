@@ -8,21 +8,33 @@ dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 4200;
+
+  // Production optimizations
+  if (process.env.NODE_ENV === 'production') {
+    Error.stackTraceLimit = 20;
+  }
 
   // Enable CORS
   app.use(
     cors({
       origin: [
-        "http://localhost:8080",
         "http://localhost:4200",
         "http://localhost:3000",
+        "http://localhost:4201"
       ],
     })
   );
 
-  // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe());
+  // Global validation pipe with optimized configuration
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  }));
 
   // Base endpoint
   app.use("/", (req, res, next) => {
@@ -33,8 +45,9 @@ async function bootstrap() {
     }
   });
 
-  await app.listen(PORT);
+  await app.listen(PORT, '0.0.0.0');
   console.log(`Cleansheet ai-builder backend service running on port ${PORT}`);
 }
 
 bootstrap();
+

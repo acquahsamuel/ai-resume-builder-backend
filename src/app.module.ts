@@ -21,14 +21,9 @@ import { UploadModule } from './upload/upload.module';
     TemplateModule,
     UserModule,
     CvContentModule,
-    UploadModule
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-
-
 export class AppModule {}
-
-
-

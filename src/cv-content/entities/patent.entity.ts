@@ -36,3 +36,7 @@ export class Patent {
 
 export const PatentSchema = SchemaFactory.createForClass(Patent);
 
+// Add indexes for query optimization
+PatentSchema.index({ userId: 1, order: 1 });
+PatentSchema.index({ userId: 1, issueDate: -1 });
+

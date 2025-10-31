@@ -65,3 +65,7 @@ export class WorkExperience {
 }
 
 export const WorkExperienceSchema = SchemaFactory.createForClass(WorkExperience);
+
+// Add indexes for query optimization
+WorkExperienceSchema.index({ userId: 1, order: 1 });
+WorkExperienceSchema.index({ userId: 1, startDate: -1 });

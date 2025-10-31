@@ -54,3 +54,7 @@ export class Project {
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
 
+// Add indexes for query optimization
+ProjectSchema.index({ userId: 1, order: 1 });
+ProjectSchema.index({ userId: 1, startDate: -1 });
+

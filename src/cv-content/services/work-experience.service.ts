@@ -20,11 +20,11 @@ export class WorkExperienceService {
     return await workExperience.save();
   }
 
-  // async findAllByUser(userId: number): Promise<WorkExperience[]> {
-  //   return await this.workExperienceModel.find({ userId })
-  //     .sort({ sortOrder: 'ASC', startDate: 'DESC' })
-  //     .exec();
-  // }
+  async findAllByUser(userId: string): Promise<WorkExperience[]> {
+    return await this.workExperienceModel.find({ userId })
+      .sort({ order: 1, startDate: -1 })
+      .exec();
+  }
 
   async findOne(id: string, userId: string): Promise<WorkExperience> {
     const workExperience = await this.workExperienceModel.findOne({

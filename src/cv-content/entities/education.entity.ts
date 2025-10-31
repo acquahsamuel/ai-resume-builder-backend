@@ -66,3 +66,7 @@ export class Education {
 }
 
 export const EducationSchema = SchemaFactory.createForClass(Education);
+
+// Add indexes for query optimization
+EducationSchema.index({ userId: 1, order: 1 });
+EducationSchema.index({ userId: 1, startDate: -1 });

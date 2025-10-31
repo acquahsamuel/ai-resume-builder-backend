@@ -13,9 +13,12 @@ import {
 import { WorkExperienceService } from '../../cv-content/services/work-experience.service';
 import { CreateWorkExperienceDto } from '../../cv-content/dto/create-work-experience.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/work-experience')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class WorkExperienceController {
   constructor(private readonly workExperienceService: WorkExperienceService) {}
 

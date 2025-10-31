@@ -2,9 +2,12 @@ import { Controller, Get, Post, Body, Patch, UseGuards, Request, ValidationPipe 
 import { PersonalInfoService } from '../../cv-content/services/personal-info.service';
 import { CreatePersonalInfoDto } from '../../cv-content/dto/create-personal-info.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/personal-info')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class PersonalInfoController {
   constructor(private readonly personalInfoService: PersonalInfoService) {}
 

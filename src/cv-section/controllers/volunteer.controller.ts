@@ -2,9 +2,12 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, 
 import { VolunteerService } from '../../cv-content/services/volunteer.service';
 import { CreateVolunteerDto } from '../../cv-content/dto/create-volunteer.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/role.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller('api/v1/cv/volunteer')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('user', 'admin')
 export class VolunteerController {
   constructor(private readonly volunteerService: VolunteerService) {}
 

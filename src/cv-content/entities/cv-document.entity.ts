@@ -11,6 +11,22 @@ export class CvDocument {
   @Prop({ required: true })
   templateId: string;
 
+  @Prop({ required: false, default: 'My Resume' })
+  title: string;
+
+  @Prop({ required: false, default: '' })
+  description?: string;
+
+  @Prop({ required: false, default: false })
+  isDefault: boolean;
+
+  // Section configuration per CV
+  @Prop({ type: [String], required: false })
+  enabledSections?: string[]; // List of enabled section keys (e.g., ['HeaderProfileInfo', 'ProfessionalSummary', 'Experience'])
+
+  @Prop({ type: [String], required: false })
+  sectionOrder?: string[]; // Custom order for sections (e.g., ['HeaderProfileInfo', 'ProfessionalSummary', 'Experience', 'Education'])
+
   // Header and Personal Information
   @Prop({ type: Object, required: false })
   HeaderProfileInfo?: {
@@ -30,10 +46,7 @@ export class CvDocument {
     dateOfBirth?: string;
     nationality?: string;
     profilePhoto?: string;
-    socialMedia: Array<{
-      platform: string;
-      link: string;
-    }>;
+    socialMedia?: Record<string, string>; 
   };
 
   // Professional Summary
@@ -225,3 +238,9 @@ export class CvDocument {
 }
 
 export const CvDocumentSchema = SchemaFactory.createForClass(CvDocument);
+
+// Add indexes for query optimization
+CvDocumentSchema.index({ userId: 1 });
+CvDocumentSchema.index({ templateId: 1 });
+CvDocumentSchema.index({ createdAt: -1 });
+CvDocumentSchema.index({ userId: 1, isDefault: 1 });
