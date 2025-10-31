@@ -18,7 +18,6 @@ All endpoints require JWT authentication via the `Authorization` header.
 6. [Certifications](#certifications)
 7. [Projects](#projects)
 8. [Languages](#languages)
-
 9. [Volunteer Experience](#volunteer-experience)
 14. [Patents](#patents)
 10. [Publications](#publications)

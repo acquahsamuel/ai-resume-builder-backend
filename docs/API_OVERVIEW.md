@@ -99,3 +99,9 @@ This CV Builder backend provides a comprehensive API for creating, managing, and
 
  
 This CV Builder backend provides a solid foundation for building a comprehensive resume/CV management application with all essential features implemented and ready for production use.
+
+
+
+Bug
+
+Get all work experience **
