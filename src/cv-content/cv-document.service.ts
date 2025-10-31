@@ -44,16 +44,47 @@ export class CvDocumentService {
     private readonly referenceService: ReferenceService,
   ) { }
 
-  async findAllCV(userId: string): Promise<CvDocument[]> {
-    return await this.cvDocumentModel.find({ userId }).exec();
-  }
-
-  async findCV(id: string, userId: string): Promise<CvDocument> {
+  async findCV(id: string, userId: string): Promise<Partial<CvDocument>> {
     const cv = await this.cvDocumentModel.findOne({ _id: id, userId }).exec();
     if (!cv) {
       throw new NotFoundException('CV not found');
     }
-    return cv;
+    // Return generated CV with all sections
+    return this.generateCV(userId, id);
+  }
+
+  async createCV(
+    userId: string,
+    templateId: string,
+    title?: string,
+    description?: string,
+    enabledSections?: string[],
+    sectionOrder?: string[],
+    isDefault?: boolean,
+  ): Promise<Partial<CvDocument>> {
+    // If setting as default, unset all other defaults for this user
+    if (isDefault) {
+      await this.cvDocumentModel.updateMany(
+        { userId },
+        { $set: { isDefault: false } }
+      ).exec();
+    }
+
+    // Create new CV document
+    const newCV = new this.cvDocumentModel({
+      userId,
+      templateId,
+      title: title || 'My Resume',
+      description: description || '',
+      enabledSections: enabledSections || [],
+      sectionOrder: sectionOrder || [],
+      isDefault: isDefault || false,
+    });
+
+    const savedCV = await newCV.save();
+
+    // Return generated CV with all sections populated
+    return this.generateCV(userId, savedCV._id.toString());
   }
 
   async deleteCV(id: string, userId: string) {
@@ -64,8 +95,13 @@ export class CvDocumentService {
     return result;
   }
 
-  async getAllUserCV(userId: string): Promise<CvDocument[]> {
-    return await this.cvDocumentModel.find({ userId }).sort({ createdAt: -1 }).exec();
+  async getAllUserCV(userId: string): Promise<Partial<CvDocument>[]> {
+    const cvs = await this.cvDocumentModel.find({ userId }).sort({ createdAt: -1 }).exec();
+    // Generate each CV to include all sections
+    const generatedCVs = await Promise.all(
+      cvs.map(cv => this.generateCV(userId, cv._id.toString()))
+    );
+    return generatedCVs;
   }
 
   async generateCV(userId: string, cvId?: string): Promise<Partial<CvDocument>> {
@@ -113,7 +149,12 @@ export class CvDocumentService {
         }
       }
 
-      // Fetch all sections in parallel
+      // Fetch all sections in parallel using Promise.allSettled
+      // Promise.allSettled returns an array of objects with:
+      // - status: 'fulfilled' (success) or 'rejected' (failed)
+      // - value: the actual data (if fulfilled)
+      // - reason: the error (if rejected)
+      // This allows us to handle errors gracefully - if one section fails, others still work
       const [
         personalInfo,
         professionalSummary,
@@ -149,6 +190,8 @@ export class CvDocumentService {
       ]);
 
       // Map PersonalInfo to HeaderProfileInfo
+      // Check: personalInfo.status === 'fulfilled' means the promise succeeded
+      // AND personalInfo.value exists (not null) means we actually got data
       const headerProfileInfo = personalInfo.status === 'fulfilled' && personalInfo.value ? {
         firstName: personalInfo.value.firstName,
         lastName: personalInfo.value.lastName,
@@ -472,14 +515,14 @@ export class CvDocumentService {
   }
 
   // Duplicate a CV
-  async duplicateCV(id: string, userId: string, newTitle?: string): Promise<CvDocument> {
+  async duplicateCV(id: string, userId: string, newTitle?: string): Promise<Partial<CvDocument>> {
     const originalCV = await this.cvDocumentModel.findOne({ _id: id, userId }).exec();
 
     if (!originalCV) {
       throw new NotFoundException('CV not found');
     }
 
-   
+    // Create a new CV document from the original, excluding _id and timestamps
     const cvData = originalCV.toObject();
     delete cvData._id;
     delete cvData.createdAt;
@@ -488,7 +531,10 @@ export class CvDocumentService {
     cvData.isDefault = false; 
 
     const duplicatedCV = new this.cvDocumentModel(cvData);
-    return duplicatedCV.save();
+    const savedCV = await duplicatedCV.save();
+
+    // Generate and return the full CV with all sections populated
+    return this.generateCV(userId, savedCV._id.toString());
   }
 
   // Update section order for a CV
@@ -522,14 +568,15 @@ export class CvDocumentService {
   }
 
   // Get all CVs for a user by template
-  async getCVsByTemplate(userId: string, templateId: string): Promise<CvDocument[]> {
-    return await this.cvDocumentModel.find({ userId, templateId }).sort({ createdAt: -1 }).exec();
+  async getCVsByTemplate(userId: string, templateId: string): Promise<Partial<CvDocument>[]> {
+    const cvs = await this.cvDocumentModel.find({ userId, templateId }).sort({ createdAt: -1 }).exec();
+    // Generate each CV to include all sections
+    const generatedCVs = await Promise.all(
+      cvs.map(cv => this.generateCV(userId, cv._id.toString()))
+    );
+    return generatedCVs;
   }
 
-  // Get default CV for a user
-  async getDefaultCV(userId: string): Promise<CvDocument | null> {
-    return await this.cvDocumentModel.findOne({ userId, isDefault: true }).exec();
-  }
 
   // Update template for a CV
   async updateTemplate(id: string, userId: string, templateId: string): Promise<CvDocument> {
