@@ -16,7 +16,7 @@ import { UploadModule } from './upload/upload.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    MongooseModule.forRoot(mongooseConfig.uri),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     AuthModule,
     TemplateModule,
     UserModule,
