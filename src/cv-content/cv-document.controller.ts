@@ -1,9 +1,12 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CvDocumentService } from './cv-document.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/role.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 
+@ApiTags('cv-content')
+@ApiBearerAuth('JWT-auth')
 @Controller('api/v1/cvs')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('user', 'admin')
