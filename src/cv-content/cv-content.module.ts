@@ -21,6 +21,7 @@ import { Patent, PatentSchema } from './entities/patent.entity';
 import { Course, CourseSchema } from './entities/course.entity';
 import { PersonalInfo, PersonalInfoSchema } from './entities/personal-info.entity';
 import { ProfessionalSummary, ProfessionalSummarySchema } from './entities/professional-summary.entity';
+import { CvTemplate, CvTemplateSchema } from '../template/entities/cv-template.entity';
 
 // Services
 import { WorkExperienceService } from './services/work-experience.service';
@@ -75,6 +76,7 @@ import { ProfessionalSummaryController } from '../cv-section/controllers/profess
       { name: Course.name, schema: CourseSchema },
       { name: PersonalInfo.name, schema: PersonalInfoSchema },
       { name: ProfessionalSummary.name, schema: ProfessionalSummarySchema },
+      { name: CvTemplate.name, schema: CvTemplateSchema },
     ]),
     AuthModule,
   ],

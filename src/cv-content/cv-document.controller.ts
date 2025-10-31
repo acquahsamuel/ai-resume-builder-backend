@@ -18,16 +18,7 @@ export class CvDocumentController {
     return this.cvDocumentService.findAllCV(req.user.userId);
   }
 
-  @Get('generate')
-  generateCV(@Request() req) {
-    return this.cvDocumentService.generateCV(req.user.userId);
-  }
-
-  @Get('generate/:id')
-  generateCVById(@Param('id') id: string, @Request() req) {
-    return this.cvDocumentService.generateCV(req.user.userId, id);
-  }
-
+  // Specific routes MUST come before the catch-all :id route
   @Get('my-cvs')
   getAllUserCV(@Request() req) {
     return this.cvDocumentService.getAllUserCV(req.user.userId);
@@ -38,11 +29,28 @@ export class CvDocumentController {
     return this.cvDocumentService.getDefaultCV(req.user.userId);
   }
 
+  @Get('generate/:id')
+  @ApiOperation({ summary: 'Generate CV by ID' })
+  @ApiParam({ name: 'id', description: 'CV document ID' })
+  @ApiResponse({ status: 200, description: 'CV generated successfully' })
+  @ApiResponse({ status: 404, description: 'CV not found' })
+  generateCVById(@Param('id') id: string, @Request() req) {
+    return this.cvDocumentService.generateCV(req.user.userId, id);
+  }
+
+  @Get('generate')
+  @ApiOperation({ summary: 'Generate CV using default CV' })
+  @ApiResponse({ status: 200, description: 'CV generated successfully' })
+  generateCV(@Request() req) {
+    return this.cvDocumentService.generateCV(req.user.userId);
+  }
+
   @Get('template/:templateId')
   getCVsByTemplate(@Param('templateId') templateId: string, @Request() req) {
     return this.cvDocumentService.getCVsByTemplate(req.user.userId, templateId);
   }
 
+  // Catch-all route for getting CV by ID - MUST be last
   @Get(':id')
   findCVById(@Param('id') id: string, @Request() req) {
     return this.cvDocumentService.findCV(id, req.user.userId);

@@ -28,12 +28,20 @@ export class AuthService {
     });
     await user.save();
 
-    // Send verification email
+    // Send verification email asynchronously (non-blocking)
     const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1h' });
     const verificationLink = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/verify-email?token=${token}`;
-    await this.emailService.sendVerificationEmail(user.email, verificationLink);
+    
+    // Fire and forget - don't await to avoid blocking the response
+    this.emailService.sendVerificationEmail(user.email, verificationLink).catch((error) => {
+      // Log error but don't throw - email sending failure shouldn't break registration
+      console.error('Failed to send verification email:', error);
+    });
 
-    return user;
+    return {
+      message: 'Registration successful. Please check your email for verification link.',
+      user,
+    };
   }
 
 
