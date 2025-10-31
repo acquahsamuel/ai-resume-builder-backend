@@ -426,3 +426,514 @@ Supported platforms for `socialMedia` array:
 5. **Social Media**: Array of objects with `platform` and `link` properties
 6. **Date Format**: Use ISO 8601 format (YYYY-MM-DD) for dateOfBirth
 
+
+
+# CV Builder API Overview
+
+## 🚀 Complete Backend Implementation
+
+This CV Builder backend provides a comprehensive API for creating, managing, and customizing professional resumes/CVs. Built with NestJS, Mongoose, and MongoDB.
+
+## ✅ Implemented Features
+
+### 4. Template System
+- **Multiple Layouts**: Modern, Classic, Creative, Minimalist styles
+- **Customizable Design**: Colors, fonts, spacing, margins
+- **Premium/Free Tiers**: Support for paid template features
+- **Template Categories**: Organized by profession and style
+- **Preview System**: Template preview images and metadata
+
+### 5. File Management
+- **Secure Uploads**: Profile photos and document uploads
+- **File Validation**: Type, size, and format checking
+- **Static File Serving**: Optimized file delivery
+- **Storage Organization**: Structured file storage system
+
+
+### Relationships
+- **User → WorkExperience**: One-to-Many
+- **User → Education**: One-to-Many
+- **User → Skill**: One-to-Many
+- **User → CvContent**: One-to-Many
+
+## 🛠 API Endpoints
+
+### Authentication (`/api/v1/auth`)
+| Method | Endpoint | Description | Protected |
+|--------|----------|-------------|-----------|
+| POST | `/register` | User registration | ❌ |
+| POST | `/login` | User login | ❌ |
+| POST | `/logout` | User logout | ✅ |
+| GET | `/profile` | Get user profile | ✅ |
+| POST | `/refresh-token` | Refresh JWT token | ❌ |
+| POST | `/forgot-password` | Password reset request | ❌ |
+| POST | `/reset-password` | Reset password | ❌ |
+| POST | `/verify-email` | Email verification | ❌ |
+| POST | `/resend-verification` | Resend verification | ❌ |
+
+### Work Experience (`/api/v1/cv/work-experience`)
+| Method | Endpoint | Description | Protected |
+|--------|----------|-------------|-----------|
+| GET | `/` | Get user's experiences | ✅ |
+| POST | `/` | Add new experience | ✅ |
+| GET | `/:id` | Get specific experience | ✅ |
+| PATCH | `/:id` | Update experience | ✅ |
+| DELETE | `/:id` | Delete experience | ✅ |
+| POST | `/reorder` | Reorder experiences | ✅ |
+| POST | `/generate-description` | AI job descriptions | ✅ |
+
+### File Upload (`/api/v1/upload`)
+| Method | Endpoint | Description | Protected |
+|--------|----------|-------------|-----------|
+| POST | `/profile-photo` | Upload profile photo | ✅ |
+| POST | `/document` | Upload document | ✅ |
+
+### Users (`/api/v1/users`)
+| Method | Endpoint | Description | Protected |
+|--------|----------|-------------|-----------|
+| GET | `/` | Get all users | ✅ |
+| GET | `/:id` | Get user by ID | ✅ |
+| POST | `/` | Create user | ✅ |
+| PATCH | `/:id` | Update user | ✅ |
+| DELETE | `/:id` | Delete user | ✅ |
+
+ 
+
+## 📈 Future Enhancements
+
+### Planned Features (Ready for Implementation)
+1. **AI-Powered Features**
+   - Job description generation
+   - Content suggestions
+   - Skill recommendations
+
+2. **PDF Generation**
+   - Template-based PDF export
+   - Multiple format support
+   - Custom styling options
+
+3. **Advanced Templates**
+   - More template categories
+   - Custom template builder
+   - Template marketplace
+
+4. **Analytics & Insights**
+   - CV performance tracking
+   - User engagement metrics
+   - Template popularity stats
+
+5. **Collaboration Features**
+   - CV sharing and feedback
+   - Recruiter dashboard
+   - Application tracking
+
+ 
+This CV Builder backend provides a solid foundation for building a comprehensive resume/CV management application with all essential features implemented and ready for production use.
+
+
+
+Bug
+
+Get all work experience **
+
+
+
+# POST /api/v1/cvs - Sample Payloads
+
+Complete sample payloads for creating new CV documents.
+
+## Endpoint
+
+```
+POST /api/v1/cvs
+Authorization: Bearer <your-jwt-token>
+Content-Type: application/json
+```
+
+---
+
+## 1. Minimal Payload (Required Fields Only)
+
+Only `templateId` is required. All other fields are optional.
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46"
+}
+```
+
+**Response:** Creates a CV with default title "My Resume", no description, all sections enabled, default section order.
+
+---
+
+## 2. Basic CV with Title
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Software Engineer CV"
+}
+```
+
+---
+
+## 3. Full Payload - Software Engineer CV
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Software Engineer CV",
+  "description": "CV tailored for software engineering positions focusing on full-stack development",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Experience",
+    "Education",
+    "Skills",
+    "Projects",
+    "Certifications"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Skills",
+    "Experience",
+    "Projects",
+    "Education",
+    "Certifications"
+  ],
+  "isDefault": false
+}
+```
+
+---
+
+## 4. Academic CV
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Academic CV",
+  "description": "CV for academic and research positions",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "Education",
+    "Publications",
+    "ProfessionalSummary",
+    "Experience",
+    "Awards",
+    "Patents",
+    "References"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "Education",
+    "Publications",
+    "Awards",
+    "ProfessionalSummary",
+    "Experience",
+    "Patents",
+    "References"
+  ],
+  "isDefault": false
+}
+```
+
+---
+
+## 5. DevOps Engineer CV
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "DevOps Engineer CV",
+  "description": "CV highlighting infrastructure and cloud expertise",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Certifications",
+    "Skills",
+    "Experience",
+    "Projects",
+    "Education"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Certifications",
+    "Skills",
+    "Experience",
+    "Projects",
+    "Education"
+  ],
+  "isDefault": false
+}
+```
+
+---
+
+## 6. Creative/Design CV
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Creative Designer CV",
+  "description": "Portfolio-focused CV for design positions",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Projects",
+    "Experience",
+    "Skills",
+    "Education",
+    "Awards"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "Projects",
+    "ProfessionalSummary",
+    "Experience",
+    "Skills",
+    "Awards",
+    "Education"
+  ],
+  "isDefault": false
+}
+```
+
+---
+
+## 7. Executive/Manager CV
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Executive Summary CV",
+  "description": "Senior leadership position CV",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Experience",
+    "Education",
+    "Certifications",
+    "Awards",
+    "References"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Experience",
+    "Education",
+    "Certifications",
+    "Awards",
+    "References"
+  ],
+  "isDefault": false
+}
+```
+
+---
+
+## 8. Student/Entry-Level CV
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Entry-Level Software Developer CV",
+  "description": "CV for recent graduate seeking first position",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Education",
+    "Skills",
+    "Projects",
+    "Courses",
+    "Volunteer"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Education",
+    "Skills",
+    "Projects",
+    "Courses",
+    "Volunteer"
+  ],
+  "isDefault": false
+}
+```
+
+---
+
+## 9. Default CV
+
+Set the CV as default when creating:
+
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "My Primary Resume",
+  "description": "Main CV for general use",
+  "isDefault": true
+}
+```
+
+**Note:** Setting `isDefault: true` will automatically unset all other CVs as default for your account.
+
+---
+
+## Valid Section Keys
+
+Use these exact keys for `enabledSections` and `sectionOrder`:
+
+- `HeaderProfileInfo` - Personal information
+- `ProfessionalSummary` - Summary/Objective
+- `Experience` - Work experience
+- `Education` - Education history
+- `Skills` - Technical and soft skills
+- `Certifications` - Professional certifications
+- `Courses` - Completed courses
+- `Awards` - Awards and honors
+- `Volunteer` - Volunteer experience
+- `Publications` - Research publications
+- `Patents` - Patents
+- `Projects` - Projects portfolio
+- `Languages` - Language proficiency
+- `Hobbies` - Hobbies and interests
+- `References` - Professional references
+
+---
+
+## Response Format
+
+All endpoints return the generated CV with all sections populated:
+
+```json
+{
+  "_id": "6904f123a6314376f7a15456",
+  "userId": "6904dca6426eb4ea7289a06f",
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Software Engineer CV",
+  "description": "CV tailored for software engineering positions",
+  "isDefault": false,
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Experience",
+    "Education",
+    "Skills"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Skills",
+    "Experience",
+    "Education"
+  ],
+  "HeaderProfileInfo": { ... },
+  "ProfessionalSummary": { ... },
+  "Experience": [ ... ],
+  "Education": [ ... ],
+  "Skills": [ ... ],
+  ...
+}
+```
+
+---
+
+## Common Use Cases
+
+### Quick Start - Minimal
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "My CV"
+}
+```
+
+### Customized for Role
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Frontend Developer CV",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Skills",
+    "Projects",
+    "Experience",
+    "Education"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Skills",
+    "Projects",
+    "Experience",
+    "Education"
+  ]
+}
+```
+
+### Full Customization
+```json
+{
+  "templateId": "6904e14148e8d6ac9a1e2e46",
+  "title": "Senior Full-Stack Developer CV",
+  "description": "CV for senior-level full-stack positions with 10+ years experience",
+  "enabledSections": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Experience",
+    "Skills",
+    "Projects",
+    "Certifications",
+    "Education",
+    "Languages"
+  ],
+  "sectionOrder": [
+    "HeaderProfileInfo",
+    "ProfessionalSummary",
+    "Experience",
+    "Skills",
+    "Projects",
+    "Certifications",
+    "Education",
+    "Languages"
+  ],
+  "isDefault": true
+}
+```
+
+---
+
+## Error Responses
+
+### 400 Bad Request - Invalid Template ID
+```json
+{
+  "statusCode": 400,
+  "message": ["templateId must be a string"],
+  "error": "Bad Request"
+}
+```
+
+### 400 Bad Request - Invalid Section Name
+```json
+{
+  "statusCode": 400,
+  "message": ["enabledSections must be an array of strings"],
+  "error": "Bad Request"
+}
+```
+
+---
+
+## Tips
+
+1. **Start Simple**: Use minimal payload first, then customize later using PATCH endpoints
+2. **Section Order**: Order sections to highlight your strengths (e.g., put Skills first for technical roles)
+3. **Default CV**: Only one CV can be default - setting a new one will unset the previous default
+4. **Template ID**: Get available templates from `GET /api/v1/template`
+5. **All Sections**: If `enabledSections` is empty or not provided, all sections with data will be included
+
