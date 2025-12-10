@@ -9,6 +9,7 @@ import { CvContentModule } from './cv-content/cv-content.module';
 import mongooseConfig from './common/config/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { UploadModule } from './upload/upload.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UploadModule } from './upload/upload.module';
     UserModule,
     CvContentModule,
     UploadModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

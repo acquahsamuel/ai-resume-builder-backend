@@ -5,6 +5,7 @@ import { User, UserDocument } from 'src/user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/common/email/email.service';
+import { SubscriptionService } from 'src/subscription/subscription.service';
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class AuthService {
     private readonly authModel: Model<UserDocument>,
     private jwtService: JwtService,
     private emailService: EmailService,
+    private subscriptionService: SubscriptionService,
   ) { }
 
   /**
@@ -28,13 +30,16 @@ export class AuthService {
     });
     await user.save();
 
+    // Ensure a trial subscription starts immediately after registration
+    this.subscriptionService.ensureTrial((user as any)._id.toString()).catch((error) => {
+      // Non-blocking to avoid breaking registration in case of subscription issues
+      console.error('Failed to create trial subscription:', error);
+    });
+
     // Send verification email asynchronously (non-blocking)
     const token = this.jwtService.sign({ email: user.email }, { expiresIn: '1h' });
     const verificationLink = `${process.env.FRONTEND_URL || 'http://localhost:4200'}/verify-email?token=${token}`;
-    
-    // Fire and forget - don't await to avoid blocking the response
     this.emailService.sendVerificationEmail(user.email, verificationLink).catch((error) => {
-      // Log error but don't throw - email sending failure shouldn't break registration
       console.error('Failed to send verification email:', error);
     });
 
@@ -167,11 +172,15 @@ export class AuthService {
 
 
   async getLoggedInUserProfile(id: string) {
-    const user = await this.authModel.findById(id).exec();
+    const user = await this.authModel.findById(id).select('-password').exec();
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    return user;
+
+    const subscription = await this.subscriptionService.getSubscriptionForUser(
+      (user as any)._id.toString(),
+    );
+    return { user, subscription };
   }
 
   async updatePassword() {
