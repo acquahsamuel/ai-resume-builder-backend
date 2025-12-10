@@ -5,7 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { TemplateModule } from './template/template.module';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CvContentModule } from './cv-content/cv-content.module';
 import mongooseConfig from './common/config/database.config';
 import { ConfigModule } from '@nestjs/config';
 import { UploadModule } from './upload/upload.module';
@@ -21,7 +20,6 @@ import { SubscriptionModule } from './subscription/subscription.module';
     AuthModule,
     TemplateModule,
     UserModule,
-    CvContentModule,
     UploadModule,
     SubscriptionModule,
   ],

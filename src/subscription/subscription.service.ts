@@ -43,19 +43,51 @@ export class SubscriptionService {
   ) {}
 
   async ensureTrial(userId: string): Promise<SubscriptionDocument> {
-    let subscription = await this.subscriptionModel.findOne({ user: userId }).exec();
-    if (!subscription) {
-      subscription = new this.subscriptionModel({
-        user: new Types.ObjectId(userId),
-        planAmount: this.planAmount,
-        currency: 'USD',
-        trialEndsAt: addDays(new Date(), this.trialDays),
-        status: SubscriptionStatus.TRIAL,
-      });
-      await subscription.save();
-    }
+    const userObjectId = new Types.ObjectId(userId);
+    
+    try {
+      // Use findOneAndUpdate with upsert to atomically create or retrieve subscription
+      // This prevents race conditions that could cause duplicate key errors
+      const subscription = await this.subscriptionModel
+        .findOneAndUpdate(
+          { user: userObjectId },
+          {
+            $setOnInsert: {
+              user: userObjectId,
+              planAmount: this.planAmount,
+              currency: 'USD',
+              trialEndsAt: addDays(new Date(), this.trialDays),
+              status: SubscriptionStatus.TRIAL,
+            },
+          },
+          {
+            upsert: true,
+            new: true,
+            setDefaultsOnInsert: true,
+          },
+        )
+        .exec();
 
-    return this.refreshStatus(subscription);
+      if (!subscription) {
+        throw new InternalServerErrorException('Failed to ensure trial subscription');
+      }
+
+      return this.refreshStatus(subscription);
+    } catch (error: any) {
+      // Handle duplicate key error - fetch existing subscription if upsert failed
+      if (error?.code === 11000 || error?.name === 'MongoServerError') {
+        this.logger.warn(
+          `Duplicate key error for user ${userId}, fetching existing subscription`,
+        );
+        const existing = await this.subscriptionModel
+          .findOne({ user: userObjectId })
+          .exec();
+        if (existing) {
+          return this.refreshStatus(existing);
+        }
+      }
+      throw error;
+    }
   }
 
   async getSubscriptionForUser(userId: string): Promise<SubscriptionDocument> {

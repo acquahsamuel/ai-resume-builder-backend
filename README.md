@@ -576,6 +576,28 @@ POST   /payments/cancel
 POST   /payments/upgrade
 ```
 
+### Subscriptions (Hubtel)
+```
+GET    /api/v1/subscriptions/me                 # requires JWT; returns user + subscription
+POST   /api/v1/subscriptions/checkout           # requires JWT; starts $10 monthly checkout
+POST   /api/v1/subscriptions/renew              # requires JWT; same as checkout for renewal
+GET    /api/v1/subscriptions/status/:clientReference  # requires JWT; pulls status + refreshes
+POST   /api/v1/subscriptions/hubtel/callback    # public; Hubtel callback
+```
+
+**Flow**
+- New users automatically get a 14-day trial on registration.
+- Active plan: $10/month; period end is 30 days from successful payment.
+- Renewal/activation: call `POST /api/v1/subscriptions/checkout` (or `renew`) to get `checkoutUrl`, redirect the user to pay.
+- Hubtel will hit the callback; we mark subscription active and set next period end.
+- If the client misses the callback, call `GET /api/v1/subscriptions/status/:clientReference` to reconcile status with Hubtel’s status API.
+- `GET /api/v1/subscriptions/me` always returns the current subscription snapshot.
+
+**Environment**
+- `HUBTEL_AUTH_KEY` (Base64 basic auth)
+- `HUBTEL_MERCHANT_ACCOUNT_NUMBER`
+- Optional overrides: `HUBTEL_CALLBACK_URL`, `HUBTEL_RETURN_URL`, `HUBTEL_CANCELLATION_URL`, `API_BASE_URL`
+
 ---
 
 ## 🎨 Frontend Considerations
